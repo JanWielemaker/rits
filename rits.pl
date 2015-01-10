@@ -1,4 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Tasks for students. (task number, expression)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -6,9 +5,11 @@ example(1, 1/2 + 1/2).
 example(2, 1/4 + 2/4).
 example(3, 1/3 + 1/2).
 example(4, 1/5 + 2/3).
+
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 help_for_wrong_answer(A rdiv B + C rdiv D, X rdiv _) :-
         B =\= D,
         X =:= A + C,
@@ -19,7 +20,7 @@ help_for_wrong_answer(A rdiv B + C rdiv D, Answer) :-
         format("    You should not sum the denominators, but only the numerators!\n").
 help_for_wrong_answer(_, _) :-
         format("    Unfortunately, I cannot give any useful hints here.\n").
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Program entry point, controlling the interactive session.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
