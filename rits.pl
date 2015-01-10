@@ -11,6 +11,10 @@ example(4, 1/5 + 2/3).
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+% help_for_wrong_answer(_, _, Hist0, _) :-
+%         format("HISTORY so far: ~w\n", [Hist0]),
+%         false.
+
 % Help for cancellation
 
 help_for_wrong_answer(cancel(A/B), _, Hist, Hist) :-
@@ -119,7 +123,7 @@ solve_with_student_(Expression, Hist0, Hist) :-
         next(Expression, Answer, Hist0, Next),
         do_next(Next, Expression, Answer, Hist0, Hist).
 
-do_next(done, _, _, Hist, Hist).
+do_next(done, Expr, Answer, Hist0, [Expr-Answer|Hist0]).
 do_next(repeat, Expr, Answer, Hist0, Hist) :-
         format("    So, let's try again!\n"),
         solve_with_student(Expr, [Expr-Answer|Hist0], Hist).
@@ -193,6 +197,8 @@ next_(Expression0, Answer0, _, Next) :-
         ).
 
 run :- solve_with_student(1/2 + 3/4).
+
+%?- solve_with_student(cm(2,4), [], Hist).
 
 /** <examples>
 
