@@ -76,10 +76,10 @@ help_for_wrong_answer(A/B + C/D, Answer0, Hist, Hist) :-
         format("    You should not sum the denominators, but only the numerators!\n").
 help_for_wrong_answer(_/B + _/_, _ / Y, Hist, Hist) :-
         Y mod B =\= 0,
-        format("    ~w cannot be a common denominator, because it cannot be diveded by ~w.\n", [Y,B]).
+        format("    ~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B]).
 help_for_wrong_answer(_/_ + _/D, _ / Y, Hist, Hist) :-
         Y mod D =\= 0,
-        format("    ~w cannot be a common denominator, because it cannot be diveded by ~w.\n", [Y,D]).
+        format("    ~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D]).
 
 % Fallback
 
