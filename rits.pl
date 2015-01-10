@@ -213,8 +213,6 @@ next_(Expression0, Answer0, _, Next) :-
 
 run :- solve_with_student(1/2 + 3/4).
 
-%?- solve_with_student(cm(2,4), [], Hist).
-
 /** <examples>
 
 ?- solve_with_student(1/2 + 3/4).
