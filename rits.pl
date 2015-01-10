@@ -14,6 +14,13 @@ example(4, 1/5 + 2/3).
 help_for_wrong_answer(cm(_,_), X, _) :-
         \+ integer(X),
         format("    A common multiple must be an integer!\n").
+help_for_wrong_answer(cm(X,Y), _, Hist) :-
+        findall(., member(cm(X,Y)-_, Hist), Ls),
+        length(Ls, L),
+        L > 3,
+        format("    I see you are having a hard time with this.\n"),
+        least_common_multiple(X, Y, CM),
+        format("    Hint: ~w is a possible solution.\n", [CM]).
 help_for_wrong_answer(cm(X,Y), A, _) :-
         A mod X =\= 0,
         format("    ~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X]).
@@ -41,9 +48,7 @@ help_for_wrong_answer(_, _, _) :-
 run_examples(Fs) :- maplist(run_example, Fs).
 run_example(N) :-
         example(N, Goal),
-        excursion(solve_with_student(Goal), true).
-
-excursion(Target, Goal) :- catch(Target, back, Goal).
+        solve_with_student(Goal).
 
 fraction_layout(A + B) :- fraction_layout(A), write(" + "), fraction_layout(B).
 fraction_layout(A/B)   :- format("~w/~w", [A,B]).
