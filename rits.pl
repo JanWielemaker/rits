@@ -1,3 +1,12 @@
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   RRRR    II  TTTTTTTT  SSSS
+   R  R    II     TT    SS             Rule-based Intelligent
+   RRRR    II     TT     SSSSS         Tutoring System.
+   R   R   II     TT         SS
+   R   RR  II     TT   SSSSSSS
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Tasks for students. (task number, expression)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -166,7 +175,7 @@ next_(cancel(A/B), Answer0, _, Next) :-
                     format(" and also minimal. Very nice!\n\n"),
                     Next = done
                 ;   format(", but not minimal.\n"),
-                    Next = excursion(help_for_wrong_answer(cancel(X/Y), Answer0))
+                    Next = continue(cancel(X/Y))
                 )
             ;   format("This is wrong!\n"),
                 Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
