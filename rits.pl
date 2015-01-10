@@ -63,7 +63,7 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist0, Hist) :-
         format("    You cannot just sum the numerators when the denominators are different!\n\n"),
         (   member(cm(B,D)-Answer, Hist0), least_common_multiple(B,D,Answer) ->
             format("    Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
-            format("    First rewrite the fractions so that the denominator is ~w for both, then add.", [Answer])
+            format("    First rewrite the fractions so that the denominator is ~w for both, then add.\n", [Answer])
         ;   member(cm(B,D)-Answer, Hist0), Answer mod B =:= 0, Answer mod D =:= 0 ->
             format("    Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
             format("    You can either use that, or find a smaller multiple to make it easier.\n")
