@@ -11,27 +11,27 @@ example(4, 1/5 + 2/3).
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-help_for_wrong_answer(cm(_,_), X) :-
+help_for_wrong_answer(cm(_,_), X, _) :-
         \+ integer(X),
         format("    A common multiple must be an integer!\n").
-help_for_wrong_answer(cm(X,Y), A) :-
+help_for_wrong_answer(cm(X,Y), A, _) :-
         A mod X =\= 0,
         format("    ~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X]).
-help_for_wrong_answer(cm(X,Y), A) :-
+help_for_wrong_answer(cm(X,Y), A, _) :-
         A mod Y =\= 0,
         format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible ~w!\n", [A,X,Y,A,Y]).
 
-help_for_wrong_answer(A/B + C/D, X / _) :-
+help_for_wrong_answer(A/B + C/D, X / _, _) :-
         B =\= D,
         X =:= A + C,
         format("    You cannot just sum the numerators when the denominators are different!\n\n"),
         format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
         solve_with_student(cm(B,D)).
-help_for_wrong_answer(A/B + C/D, Answer0) :-
+help_for_wrong_answer(A/B + C/D, Answer0, _) :-
         to_rational(Answer0, Answer),
         Answer =:= (A + C) rdiv (B + D),
         format("    You should not sum the denominators, but only the numerators!\n").
-help_for_wrong_answer(_, _) :-
+help_for_wrong_answer(_, _, _) :-
         format("    Unfortunately, I cannot give any useful hints here.\n").
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -63,37 +63,43 @@ read_answer(T) :-
             read_answer(T)
         ).
 
-solve_with_student(Expression) :- once(solve_with_student_(Expression)).
+solve_with_student(Expression) :- solve_with_student(Expression).
 
-solve_with_student_(Expression) :-
+solve_with_student(Expression, Hist) :- once(solve_with_student_(Expression, Hist)).
+
+solve_with_student_(Expression, Hist) :-
         Expression = cm(X,Y),
         format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n", [X,Y]),
         read_answer(Answer),
         nl,
-        next(Expression, Answer, Next),
-        do_next(Next, Expression).
-solve_with_student_(Expression) :-
+        next(Expression, Answer, Hist, Next),
+        do_next(Next, Expression, [Expression-Answer|Hist]).
+solve_with_student_(Expression, Hist) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
         fraction_layout(Expression),
         nl, nl,
         read_answer(Answer),
         nl,
-        next(Expression, Answer, Next),
-        do_next(Next, Expression).
+        next(Expression, Answer, Hist, Next),
+        do_next(Next, Expression, [Expression-Answer|Hist]).
 
-do_next(done, _).
-do_next(repeat, Expr) :-
+do_next(done, _, _).
+do_next(repeat, Expr, Hist) :-
         format("    So, let's try again!\n"),
-        solve_with_student(Expr).
-do_next(excursion(Exc), Expr) :- excursion(Exc), do_next(repeat, Expr).
+        solve_with_student(Expr, Hist).
+do_next(excursion(Exc), Expr, Hist) :-
+        excursion(Exc, Hist),
+        do_next(repeat, Expr, Hist).
 
-excursion(help_for_wrong_answer(E, A)) :- once(help_for_wrong_answer(E, A)).
+excursion(help_for_wrong_answer(E, A), Hist) :-
+        once(help_for_wrong_answer(E, A, Hist)).
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
-next(Expression, Answer, Next) :- once(next_(Expression, Answer, Next)).
+next(Expression, Answer, Hist, Next) :-
+        once(next_(Expression, Answer, Hist, Next)).
 
-next_(cm(X,Y), Answer, Next) :-
+next_(cm(X,Y), Answer, Hist, Next) :-
         (   Answer mod X =:= 0,
             Answer mod Y =:= 0 ->
             format("    Good, the solution is correct"),
@@ -104,9 +110,9 @@ next_(cm(X,Y), Answer, Next) :-
                 Next = done
             )
         ;   format("    This is wrong.\n"),
-            Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
+            Next = excursion(help_for_wrong_answer(cm(X,Y), Answer, Hist))
         ).
-next_(Expression0, Answer0, Next) :-
+next_(Expression0, Answer0, Hist, Next) :-
         to_rational(Expression0, Expression),
         to_rational(Answer0, Answer),
         (   Expression =:= Answer ->
@@ -119,7 +125,7 @@ next_(Expression0, Answer0, Next) :-
                 Next = repeat
             )
         ;   format("    This is wrong.\n"),
-            Next = excursion(help_for_wrong_answer(Expression0, Answer0))
+            Next = excursion(help_for_wrong_answer(Expression0, Answer0, Hist))
         ).
 
 run :- solve_with_student(1/2 + 3/4).
