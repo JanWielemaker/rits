@@ -1,6 +1,7 @@
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Tasks for students. (task number, expression)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 example(1, 1/2 + 1/2).
 example(2, 1/4 + 2/4).
 example(3, 1/3 + 1/2).
@@ -15,7 +16,8 @@ help_for_wrong_answer(A/B + C/D, X / _) :-
         X =:= A + C,
         format("    You cannot just sum the numerators when the denominators are different!\n"),
         format("    Hint: Find a common multiple of ~w and ~w.\n", [B,D]).
-help_for_wrong_answer(A rdiv B + C rdiv D, Answer) :-
+help_for_wrong_answer(A/B + C/D, Answer0) :-
+        to_rational(Answer0, Answer),
         Answer =:= (A + C) rdiv (B + D),
         format("    You should not sum the denominators, but only the numerators!\n").
 help_for_wrong_answer(_, _) :-
@@ -24,11 +26,14 @@ help_for_wrong_answer(_, _) :-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Program entry point, controlling the interactive session.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 run_examples(Fs) :- maplist(run_example, Fs).
 run_example(N) :-
         example(N, Goal),
         excursion(solve_with_student(Goal), true).
+
 excursion(Target, Goal) :- catch(Target, back, Goal).
+
 fraction_layout(A + B) :- fraction_layout(A), write(" + "), fraction_layout(B).
 fraction_layout(A/B)   :- format("~w/~w", [A,B]).
 
@@ -47,15 +52,14 @@ read_answer(T) :-
             read_answer(T)
         ).
 
-solve_with_student(Expression0) :-
+solve_with_student(Expression) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
-        fraction_layout(Expression0),
+        fraction_layout(Expression),
         nl, nl,
         read_answer(Answer),
         nl,
-        to_rational(Expression0, Expression),
         next(Expression, Answer, Next),
-        do_next(Next, Expression0).
+        do_next(Next, Expression).
 
 do_next(done, _).
 do_next(repeat, Expr) :-
@@ -63,9 +67,11 @@ do_next(repeat, Expr) :-
         solve_with_student(Expr).
 do_next(excursion(Exc), Expr) :- excursion(Exc), do_next(repeat, Expr).
 
-excursion(help_for_wrong_answer(E, A)) :- help_for_wrong_answer(E, A).
+excursion(help_for_wrong_answer(E, A)) :- once(help_for_wrong_answer(E, A)).
 
-next(Expression, Answer, Next) :-
+next(Expression0, Answer0, Next) :-
+        to_rational(Expression0, Expression),
+        to_rational(Answer0, Answer),
         (   Expression =:= Answer ->
             format("    Good, the solution is correct"),
             Shorter is Answer,
@@ -76,10 +82,13 @@ next(Expression, Answer, Next) :-
                 Next = repeat
             )
         ;   format("    This is wrong.\n"),
-            Next = excursion(help_for_wrong_answer(Expression, Answer))
+            Next = excursion(help_for_wrong_answer(Expression0, Answer0))
         ).
 
 /** <examples>
+
 ?- solve_with_student(1/2 + 3/4).
+
 ?- run_examples([1,2,4]).
+
 */
