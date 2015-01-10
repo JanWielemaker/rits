@@ -11,6 +11,15 @@ example(4, 1/5 + 2/3).
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+% Help for cancellation
+
+help_for_wrong_answer(cancel(A/B), _, Hist, Hist) :-
+        (   Hist = [cancel(Expr)-_,cancel(Expr)-_|_],
+            format("    I see you are having a hard time with this.\n"),
+            format("    Hint: Find a common divisor of ~w and ~w.\n", [A,B])
+        ;   true
+        ).
+
 % Help for common multiple
 
 help_for_wrong_answer(cm(X,Y), _, Hist, Hist) :-
@@ -92,6 +101,14 @@ solve_with_student_(Expression, Hist0, Hist) :-
         nl,
         next(Expression, Answer, Hist0, Next),
         do_next(Next, Expression, Answer, Hist0, Hist).
+solve_with_student_(cancel(Expression), Hist0, Hist) :-
+        format("\nPlease cancel common divisors in:\n\n~t~10+"),
+        fraction_layout(Expression),
+        nl, nl,
+        read_answer(Answer),
+        nl,
+        next(Expression, Answer, Hist0, Next),
+        do_next(Next, Expression, Answer, Hist0, Hist).
 solve_with_student_(Expression, Hist0, Hist) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
         fraction_layout(Expression),
@@ -108,6 +125,8 @@ do_next(repeat, Expr, Answer, Hist0, Hist) :-
 do_next(excursion(Exc), Expr, Answer, Hist0, Hist) :-
         once(excursion(Exc, Hist0, Hist1)),
         do_next(repeat, Expr, Answer, Hist1, Hist).
+do_next(continue(Cont), Expr, Answer, Hist0, Hist) :-
+        solve_with_student(Cont, [Expr-Answer|Hist0], Hist).
 
 % so that SWISH can see it is safe
 excursion(help_for_wrong_answer(E, A), Hist0, Hist) :-
@@ -134,6 +153,18 @@ next_(cm(X,Y), Answer, _, Next) :-
                 Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
             )
         ).
+next_(cancel(A/B), Answer0, _, Next) :-
+        to_rational(Answer0, Answer),
+        (   A rdiv B =:= Answer ->
+            format("    Good, the solution is correct"),
+            (   gcd(A,B) =:= 1 ->
+                format(" and also minimal. Very nice!\n\n"),
+                Next = done
+            ;   format(", but not minimal.\n"),
+                Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
+            )
+        ;   Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
+        ).
 next_(Expression0, Answer0, _, Next) :-
         to_rational(Expression0, Expression),
         to_rational(Answer0, Answer),
@@ -144,7 +175,7 @@ next_(Expression0, Answer0, _, Next) :-
                 format(" and also minimal. Very nice!\n\n"),
                 Next = done
             ;   format(", but not minimal.\n"),
-                Next = repeat
+                Next = continue(cancel(Answer0))
             )
         ;   format("    This is wrong.\n"),
             Next = excursion(help_for_wrong_answer(Expression0, Answer0))
