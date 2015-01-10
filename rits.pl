@@ -11,9 +11,8 @@ example(4, 1/5 + 2/3).
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-help_for_wrong_answer(cm(_,_), X, H, H) :-
-        \+ integer(X),
-        format("    A common multiple must be an integer!\n").
+% Help for common multiple
+
 help_for_wrong_answer(cm(X,Y), _, Hist, Hist) :-
         Hist = [cm(X,Y)-_,cm(X,Y)-_|_],
         format("    I see you are having a hard time with this.\n"),
@@ -25,6 +24,8 @@ help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
 help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
         A mod Y =\= 0,
         format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible ~w!\n", [A,X,Y,A,Y]).
+
+% Help for fractions
 
 help_for_wrong_answer(A/B + C/D, X / _, Hist0, Hist) :-
         B =\= D,
@@ -43,6 +44,17 @@ help_for_wrong_answer(A/B + C/D, Answer0, Hist, Hist) :-
         to_rational(Answer0, Answer),
         Answer =:= (A + C) rdiv (B + D),
         format("    You should not sum the denominators, but only the numerators!\n").
+help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
+        least_common_multiple(B, D, Y),
+        format("    The denominator is suitable, but the numerator is wrong!\n").
+help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
+        Y mod B =:= 0,
+        Y mod D =:= 0,
+        format("    The denominator is suitable, but the numerator is wrong!\n"),
+        format("    Use a smaller common multiple to make this easier.\n").
+
+% Fallback
+
 help_for_wrong_answer(_, _, Hist, Hist) :-
         format("    Unfortunately, I cannot give any useful hints here.\n").
 
@@ -107,17 +119,20 @@ next(Expression, Answer, Hist, Next) :-
         once(next_(Expression, Answer, Hist, Next)).
 
 next_(cm(X,Y), Answer, _, Next) :-
-        (   Answer mod X =:= 0,
-            Answer mod Y =:= 0 ->
-            format("    Good, the solution is correct"),
-            least_common_multiple(X, Y, LCM),
-            (   Answer =:= LCM -> format(" and also minimal. Very nice!\n\n"),
-                Next = done
-            ;   format(". There is also a smaller solution!\n"),
-                Next = done
+        (   \+ integer(Answer) -> Next = repeat,
+            format("    A common multiple must be an integer!\n")
+        ;   (   Answer mod X =:= 0,
+                Answer mod Y =:= 0 ->
+                format("    Good, the solution is correct"),
+                least_common_multiple(X, Y, LCM),
+                (   Answer =:= LCM -> format(" and also minimal. Very nice!\n\n"),
+                    Next = done
+                ;   format(". There is also a smaller solution!\n"),
+                    Next = done
+                )
+            ;   format("    This is wrong.\n"),
+                Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
             )
-        ;   format("    This is wrong.\n"),
-            Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
         ).
 next_(Expression0, Answer0, _, Next) :-
         to_rational(Expression0, Expression),
