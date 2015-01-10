@@ -30,10 +30,10 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist0, Hist) :-
         B =\= D,
         X =:= A + C,
         format("    You cannot just sum the numerators when the denominators are different!\n\n"),
-        (   member(cm(B,D)-Answer, Hist), least_common_multiple(B,D,Answer) ->
+        (   member(cm(B,D)-Answer, Hist0), least_common_multiple(B,D,Answer) ->
             format("    Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
             format("    First rewrite the fractions so that the denominator is ~w for both, then add.", [Answer])
-        ;   member(cm(B,D)-Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 ->
+        ;   member(cm(B,D)-Answer, Hist0), Answer mod B =:= 0, Answer mod D =:= 0 ->
             format("    Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
             format("    You can either use that, or find a smaller multiple to make it easier.\n")
         ;   format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
@@ -79,7 +79,7 @@ solve_with_student_(Expression, Hist0, Hist) :-
         read_answer(Answer),
         nl,
         next(Expression, Answer, Hist0, Next),
-        do_next(Next, Expression, [Expression-Answer|Hist0], Hist).
+        do_next(Next, Expression, Answer, Hist0, Hist).
 solve_with_student_(Expression, Hist0, Hist) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
         fraction_layout(Expression),
@@ -87,15 +87,15 @@ solve_with_student_(Expression, Hist0, Hist) :-
         read_answer(Answer),
         nl,
         next(Expression, Answer, Hist0, Next),
-        do_next(Next, Expression, [Expression-Answer|Hist0], Hist).
+        do_next(Next, Expression, Answer, Hist0, Hist).
 
-do_next(done, _, Hist, Hist).
-do_next(repeat, Expr, Hist0, Hist) :-
+do_next(done, _, _, Hist, Hist).
+do_next(repeat, Expr, Answer, Hist0, Hist) :-
         format("    So, let's try again!\n"),
-        solve_with_student(Expr, Hist0, Hist).
-do_next(excursion(Exc), Expr, Hist0, Hist) :-
-        once(excursion(Exc), Hist0, Hist1),
-        do_next(repeat, Expr, Hist1, Hist).
+        solve_with_student(Expr, [Expr-Answer|Hist0], Hist).
+do_next(excursion(Exc), Expr, Answer, Hist0, Hist) :-
+        once(excursion(Exc, Hist0, Hist1)),
+        do_next(repeat, Expr, Answer, Hist1, Hist).
 
 % so that SWISH can see it is safe
 excursion(help_for_wrong_answer(E, A), Hist0, Hist) :-
