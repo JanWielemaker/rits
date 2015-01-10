@@ -40,6 +40,14 @@ help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
 
 % Help for fractions
 
+help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
+        least_common_multiple(B, D, Y),
+        format("    The denominator is suitable, but the numerator is wrong!\n").
+help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
+        Y mod B =:= 0,
+        Y mod D =:= 0,
+        format("    The denominator is suitable, but the numerator is wrong!\n"),
+        format("    Use a smaller common multiple as denominator to make this easier.\n").
 help_for_wrong_answer(A/B + C/D, X / _, Hist0, Hist) :-
         B =\= D,
         X =:= A + C,
@@ -57,14 +65,6 @@ help_for_wrong_answer(A/B + C/D, Answer0, Hist, Hist) :-
         to_rational(Answer0, Answer),
         Answer =:= (A + C) rdiv (B + D),
         format("    You should not sum the denominators, but only the numerators!\n").
-help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
-        least_common_multiple(B, D, Y),
-        format("    The denominator is suitable, but the numerator is wrong!\n").
-help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
-        Y mod B =:= 0,
-        Y mod D =:= 0,
-        format("    The denominator is suitable, but the numerator is wrong!\n"),
-        format("    Use a smaller common multiple to make this easier.\n").
 
 % Fallback
 
