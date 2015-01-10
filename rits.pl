@@ -45,7 +45,7 @@ help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
         format("    ~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X]).
 help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
         A mod Y =\= 0,
-        format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible ~w!\n", [A,X,Y,A,Y]).
+        format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y]).
 
 % Help for fractions
 
