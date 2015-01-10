@@ -14,8 +14,9 @@ example(4, 1/5 + 2/3).
 help_for_wrong_answer(A/B + C/D, X / _) :-
         B =\= D,
         X =:= A + C,
-        format("    You cannot just sum the numerators when the denominators are different!\n"),
-        format("    Hint: Find a common multiple of ~w and ~w.\n", [B,D]).
+        format("    You cannot just sum the numerators when the denominators are different!\n\n"),
+        format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
+        solve_with_student(cm(B,D)).
 help_for_wrong_answer(A/B + C/D, Answer0) :-
         to_rational(Answer0, Answer),
         Answer =:= (A + C) rdiv (B + D),
@@ -52,6 +53,13 @@ read_answer(T) :-
             read_answer(T)
         ).
 
+
+solve_with_student(cm(X,Y)) :- !,
+        format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n~t~10+"),
+        read_answer(Answer),
+        nl,
+        next(Expression, Answer, Next),
+        do_next(Next, Expression).
 solve_with_student(Expression) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
         fraction_layout(Expression),
@@ -69,6 +77,21 @@ do_next(excursion(Exc), Expr) :- excursion(Exc), do_next(repeat, Expr).
 
 excursion(help_for_wrong_answer(E, A)) :- once(help_for_wrong_answer(E, A)).
 
+least_common_multiple(X, Y, CM) :- Cm is X*Y // gcd(X, Y).
+
+next(cm(X,Y), Answer, Next) :- !,
+        (   Answer mod X =:= 0,
+            Answer mod Y =:= 0 ->
+            format("    Good, the solution is correct"),
+            least_common_multiple(X, Y, LCM),
+            (   Answer =:= LCM -> format(" and also minimal. Very nice!\n\n"),
+                Next = done
+            ;   format(". There is also a smaller solution!\n"),
+                Next = done
+            )
+        ;   format("This is wrong.\n"),
+            Next = excursion(help_for_wrong_answer(Expression0, Answer))
+        ).
 next(Expression0, Answer0, Next) :-
         to_rational(Expression0, Expression),
         to_rational(Answer0, Answer),
