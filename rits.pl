@@ -15,9 +15,7 @@ help_for_wrong_answer(cm(_,_), X, _) :-
         \+ integer(X),
         format("    A common multiple must be an integer!\n").
 help_for_wrong_answer(cm(X,Y), _, Hist) :-
-        findall(., member(cm(X,Y)-_, Hist), Ls),
-        length(Ls, L),
-        L > 3,
+        Hist = [cm(X,Y)-_,cm(X,Y)-_|_],
         format("    I see you are having a hard time with this.\n"),
         least_common_multiple(X, Y, CM),
         format("    Hint: ~w is a possible solution.\n", [CM]).
@@ -68,7 +66,7 @@ read_answer(T) :-
             read_answer(T)
         ).
 
-solve_with_student(Expression) :- solve_with_student(Expression).
+solve_with_student(Expression) :- solve_with_student(Expression, []).
 
 solve_with_student(Expression, Hist) :- once(solve_with_student_(Expression, Hist)).
 
@@ -93,11 +91,11 @@ do_next(repeat, Expr, Hist) :-
         format("    So, let's try again!\n"),
         solve_with_student(Expr, Hist).
 do_next(excursion(Exc), Expr, Hist) :-
-        excursion(Exc, Hist),
+        once(excursion(Exc)),
         do_next(repeat, Expr, Hist).
 
-excursion(help_for_wrong_answer(E, A), Hist) :-
-        once(help_for_wrong_answer(E, A, Hist)).
+% so that SWISH can see it is safe
+excursion(help_for_wrong_answer(E, A, Hist)) :- help_for_wrong_answer(E, A, Hist).
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
@@ -134,6 +132,8 @@ next_(Expression0, Answer0, Hist, Next) :-
         ).
 
 run :- solve_with_student(1/2 + 3/4).
+
+%?- excursion(help_for_wrong_answer(1/2+3/4,4/2,[])).
 
 /** <examples>
 
