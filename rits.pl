@@ -10,7 +10,7 @@ example(4, 1/5 + 2/3).
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-help_for_wrong_answer(A rdiv B + C rdiv D, X rdiv _) :-
+help_for_wrong_answer(A/B + C/D, X / _) :-
         B =\= D,
         X =:= A + C,
         format("    You cannot just sum the numerators when the denominators are different!\n"),
@@ -35,16 +35,18 @@ fraction_layout(A/B)   :- format("~w/~w", [A,B]).
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
 to_rational(A/B, A rdiv B) :- !.
+
 read_answer(T) :-
         read(R),
         (   var(R) ->
             format("    please enter a concrete solution\n"),
             read_answer(T)
         ;   integer(R) -> T = R
-        ;   R = A / B -> T = A rdiv B
+        ;   R = A / B -> T = A / B
         ;   format("    please enter a concrete solution\n"),
             read_answer(T)
         ).
+
 solve_with_student(Expression0) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
         fraction_layout(Expression0),
@@ -54,12 +56,15 @@ solve_with_student(Expression0) :-
         to_rational(Expression0, Expression),
         next(Expression, Answer, Next),
         do_next(Next, Expression0).
+
 do_next(done, _).
 do_next(repeat, Expr) :-
         format("    So, let's try again!\n"),
         solve_with_student(Expr).
 do_next(excursion(Exc), Expr) :- excursion(Exc), do_next(repeat, Expr).
+
 excursion(help_for_wrong_answer(E, A)) :- help_for_wrong_answer(E, A).
+
 next(Expression, Answer, Next) :-
         (   Expression =:= Answer ->
             format("    Good, the solution is correct"),
