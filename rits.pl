@@ -26,12 +26,19 @@ help_for_wrong_answer(cm(X,Y), A, _) :-
         A mod Y =\= 0,
         format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible ~w!\n", [A,X,Y,A,Y]).
 
-help_for_wrong_answer(A/B + C/D, X / _, _) :-
+help_for_wrong_answer(A/B + C/D, X / _, Hist) :-
         B =\= D,
         X =:= A + C,
         format("    You cannot just sum the numerators when the denominators are different!\n\n"),
-        format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
-        solve_with_student(cm(B,D)).
+        (   member(cm(B,D)-Answer), least_common_multiple(B,D,Answer) ->
+            format("    Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
+            format("    First rewrite the fractions so that the denominator is ~w for both, then add.", [Answer])
+        ;   member(cm(B,D)-Answer), Answer mod B =:= 0, Answer mod D =:= 0 ->
+            format("    Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
+            format("    You can either use that, or find a smaller multiple to make it easier.\n")
+        ;   format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
+            solve_with_student(cm(B,D))
+        ).
 help_for_wrong_answer(A/B + C/D, Answer0, _) :-
         to_rational(Answer0, Answer),
         Answer =:= (A + C) rdiv (B + D),
