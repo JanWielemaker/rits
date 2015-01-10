@@ -16,10 +16,10 @@ help_for_wrong_answer(cm(_,_), X) :-
         format("    A common multiple must be an integer!\n").
 help_for_wrong_answer(cm(X,Y), A) :-
         A mod X =\= 0,
-        format("    ~w is no common multiple of ~w and ~w, since ~w does not divide ~w!\n", [A,X,Y,X]).
+        format("    ~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X]).
 help_for_wrong_answer(cm(X,Y), A) :-
         A mod Y =\= 0,
-        format("    ~w is no common multiple of ~w and ~w, since ~w does not divide ~w!\n", [A,X,Y,Y]).
+        format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible ~w!\n", [A,X,Y,A,Y]).
 
 help_for_wrong_answer(A/B + C/D, X / _) :-
         B =\= D,
@@ -63,14 +63,16 @@ read_answer(T) :-
             read_answer(T)
         ).
 
+solve_with_student(Expression) :- once(solve_with_student_(Expression)).
 
-solve_with_student(cm(X,Y)) :- !,
-        format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n~t~10+", [X,Y]),
+solve_with_student_(Expression) :-
+        Expression = cm(X,Y),
+        format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n", [X,Y]),
         read_answer(Answer),
         nl,
         next(Expression, Answer, Next),
         do_next(Next, Expression).
-solve_with_student(Expression) :-
+solve_with_student_(Expression) :-
         format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
         fraction_layout(Expression),
         nl, nl,
@@ -101,7 +103,7 @@ next_(cm(X,Y), Answer, Next) :-
             ;   format(". There is also a smaller solution!\n"),
                 Next = done
             )
-        ;   format("This is wrong.\n"),
+        ;   format("    This is wrong.\n"),
             Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
         ).
 next_(Expression0, Answer0, Next) :-
@@ -119,6 +121,8 @@ next_(Expression0, Answer0, Next) :-
         ;   format("    This is wrong.\n"),
             Next = excursion(help_for_wrong_answer(Expression0, Answer0))
         ).
+
+run :- solve_with_student(1/2 + 3/4).
 
 /** <examples>
 
