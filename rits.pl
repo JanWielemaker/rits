@@ -11,6 +11,16 @@ example(4, 1/5 + 2/3).
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+help_for_wrong_answer(cm(_,_), X) :-
+        \+ integer(X),
+        format("    A common multiple must be an integer!\n").
+help_for_wrong_answer(cm(X,Y), A) :-
+        A mod X =\= 0,
+        format("    ~w is no common multiple of ~w and ~w, since ~w does not divide ~w!\n", [A,X,Y,X]).
+help_for_wrong_answer(cm(X,Y), A) :-
+        A mod Y =\= 0,
+        format("    ~w is no common multiple of ~w and ~w, since ~w does not divide ~w!\n", [A,X,Y,Y]).
+
 help_for_wrong_answer(A/B + C/D, X / _) :-
         B =\= D,
         X =:= A + C,
@@ -55,7 +65,7 @@ read_answer(T) :-
 
 
 solve_with_student(cm(X,Y)) :- !,
-        format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n~t~10+"),
+        format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n~t~10+", [X,Y]),
         read_answer(Answer),
         nl,
         next(Expression, Answer, Next),
@@ -77,9 +87,11 @@ do_next(excursion(Exc), Expr) :- excursion(Exc), do_next(repeat, Expr).
 
 excursion(help_for_wrong_answer(E, A)) :- once(help_for_wrong_answer(E, A)).
 
-least_common_multiple(X, Y, CM) :- Cm is X*Y // gcd(X, Y).
+least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
-next(cm(X,Y), Answer, Next) :- !,
+next(Expression, Answer, Next) :- once(next_(Expression, Answer, Next)).
+
+next_(cm(X,Y), Answer, Next) :-
         (   Answer mod X =:= 0,
             Answer mod Y =:= 0 ->
             format("    Good, the solution is correct"),
@@ -90,9 +102,9 @@ next(cm(X,Y), Answer, Next) :- !,
                 Next = done
             )
         ;   format("This is wrong.\n"),
-            Next = excursion(help_for_wrong_answer(Expression0, Answer))
+            Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
         ).
-next(Expression0, Answer0, Next) :-
+next_(Expression0, Answer0, Next) :-
         to_rational(Expression0, Expression),
         to_rational(Answer0, Answer),
         (   Expression =:= Answer ->
