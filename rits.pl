@@ -101,9 +101,10 @@ solve_with_student_(Expression, Hist0, Hist) :-
         nl,
         next(Expression, Answer, Hist0, Next),
         do_next(Next, Expression, Answer, Hist0, Hist).
-solve_with_student_(cancel(Expression), Hist0, Hist) :-
+solve_with_student_(Expression, Hist0, Hist) :-
+        Expression = cancel(X/Y),
         format("\nPlease cancel common divisors in:\n\n~t~10+"),
-        fraction_layout(Expression),
+        fraction_layout(X/Y),
         nl, nl,
         read_answer(Answer),
         nl,
@@ -154,16 +155,26 @@ next_(cm(X,Y), Answer, _, Next) :-
             )
         ).
 next_(cancel(A/B), Answer0, _, Next) :-
-        to_rational(Answer0, Answer),
-        (   A rdiv B =:= Answer ->
-            format("    Good, the solution is correct"),
-            (   gcd(A,B) =:= 1 ->
-                format(" and also minimal. Very nice!\n\n"),
-                Next = done
-            ;   format(", but not minimal.\n"),
+        (   Answer0 = X / Y ->
+            (   A rdiv B =:= X rdiv Y ->
+                format("    Good, the solution is correct"),
+                (   gcd(X,Y) =:= 1 ->
+                    format(" and also minimal. Very nice!\n\n"),
+                    Next = done
+                ;   format(", but not minimal.\n"),
+                    Next = excursion(help_for_wrong_answer(cancel(X/Y), Answer0))
+                )
+            ;   format("This is wrong!\n"),
                 Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
             )
-        ;   Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
+        ;   integer(Answer0) ->
+            (   A mod B =:= 0, Answer0 =:= A// B ->
+                format("    Good, the solution is correct and also minimal. Very nice!\n\n"),
+                Next = done
+            ;   format("This is wrong!\n"),
+                Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
+            )
+        ;   Next = repeat
         ).
 next_(Expression0, Answer0, _, Next) :-
         to_rational(Expression0, Expression),
@@ -187,4 +198,5 @@ run :- solve_with_student(1/2 + 3/4).
 
 ?- solve_with_student(1/2 + 3/4).
 
+?- solve_with_student(cancel(10/8)).
 */
