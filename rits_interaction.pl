@@ -31,4 +31,19 @@ read_answer(T) :-
 
 solve_with_student(Expression) :-
         rits_start(S0),
-        rits_next_action(Expression, Action, S0, S1)
+        interact_until_done(Expression, S0).
+
+interact_until_done(Action0, S0) :-
+        rits_next_action(Action0, Action1, S0, S),
+        (   S == done -> true
+        ;   interpret_action(Action1, Action),
+            interact_until_done(Action, S)
+        ).
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Interpret RITS actions.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+interpret_action(format(F,As), _)                 :- format(F, As).
+interpret_action(read_answer, student_answers(T)) :- read_answer(T).
+interpret_action(fraction_layout(F), _)           :- fraction_layout(F).
