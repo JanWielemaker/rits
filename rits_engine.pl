@@ -54,13 +54,12 @@ rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
         ;   true
         ),
         S0 = s(Nexts0,Hist0),
-        (   phrase(next_actions(Action0,Hist0), As0) -> true
-        ;   portray_clause(phrase(next_actions(Action0,Hist0),_)),
-            throw(no_action_found(Action0,Hist0))
+        (   phrase(next_actions(Action0,Hist0,Hist), As0) -> true
+        ;   portray_clause(phrase(next_actions(Action0,Hist0,Hist),_)),
+            throw(no_action_found(Action0,Hist0,Hist))
         ),
         append(As0, Nexts0, Nexts1),
         %format("the next actions are: ~w\n", [Nexts1]),
-        exclude(is_format, [Action0|Hist0], Hist),
         nexts_action_nexts(Nexts1, Action, Nexts).
 
 nexts_action_nexts([], done, []).
@@ -104,7 +103,7 @@ help_for_wrong_answer(cancel(A/B), _, Hist) -->
 % Help for common multiple
 
 help_for_wrong_answer(cm(X,Y), _, Hist) -->
-        { list_internals(Hist, [cm(X,Y),cm(X,Y)|_]) },
+        { list_internals(Hist, [cm(X,Y)=_,cm(X,Y)=_,cm(X,Y)=_|_]) },
         [format("I see you are having a hard time with this.\n")],
         { CM is X*Y },
         [format("Hint: ~w * ~w = ~w is a possible solution.\n", [X,Y,CM])].
@@ -125,14 +124,15 @@ help_for_wrong_answer(_/B + _/D, _/Y, _) -->
           Y mod D =:= 0 },
         [format("The denominator is suitable, but the numerator is wrong!\n"),
          format("Use a smaller common multiple as denominator to make this easier.\n")].
-help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
+help_for_wrong_answer(A/B + C/D, X / _, Hist0) -->
         { B =\= D,
-          X =:= A + C },
+          X =:= A + C,
+          list_internals(Hist0, Hist) },
         [format("You cannot just sum the numerators when the denominators are different!\n\n")],
-        (   { member(cm(B,D)-Answer, Hist), least_common_multiple(B,D,Answer) } ->
+        (   { member(cm(B,D)=Answer, Hist), least_common_multiple(B,D,Answer) } ->
             [format("Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
              format("First rewrite the fractions so that the denominator is ~w for both, then add.\n", [Answer])]
-        ;   { member(cm(B,D)-Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 } ->
+        ;   { member(cm(B,D)=Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 } ->
             [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
              format("You can either use that, or find a smaller multiple to make it easier.\n")]
         ;   [format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
@@ -160,14 +160,15 @@ to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
 to_rational(A/B, A rdiv B) :- !.
 
-next_actions(next, _)        --> [].
-next_actions(internal(_), _) --> [].
-next_actions(done, _)        --> [].
-next_actions(student_answers(A), Hist) -->
-        { Hist = [internal(Expr)|_] },
+next_actions(next, Hist, Hist) --> [].
+next_actions(done, Hist, Hist) --> [].
+next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
+next_actions(student_answers(A), Hist0, Hist) -->
+        { Hist0 = [internal(Expr)|Rest],
+          Hist = [internal(Expr=A)|Rest] },
         nexts(Expr, A, Hist),
         !. % commit to first solution
-next_actions(solve(Expression), _) -->
+next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         solve(Expression),
         !, % commit to first solution
         [internal(Expression),read_answer].
