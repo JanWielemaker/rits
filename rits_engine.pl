@@ -31,8 +31,12 @@
    are used to recall what the current question is. They have the form
    internal(I) and do not appear to the outside.
 
-   The state is a term s(Nexts,Hist). As long as there are elements in
-   Nexts, the next action is taken from Nexts.
+   The state is a term s(Nexts,Hist). Nexts are actions that still
+   need to be executed. It is a mixture of a stack and a queue: For a
+   single student interaction, several actions might be put, in
+   sequence, into the queue, and these are executed FIFO-style. However,
+   an erroneous answer may trigger an auxiliary interaction, and these
+   are pushed and executed LIFO-style.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 rits_start(s([],[])).
