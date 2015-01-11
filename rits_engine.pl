@@ -184,11 +184,6 @@ solve(Expression) -->
         [format("Please solve:\n\n~t~10+"),
          fraction_layout(Expression)].
 
-
-% so that SWISH can see it is safe
-excursion(help_for_wrong_answer(E, A), Hist0, Hist) :-
-        help_for_wrong_answer(E, A, Hist0, Hist).
-
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
 nexts(cm(X,Y), Answer, Hist) -->
