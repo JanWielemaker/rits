@@ -13,21 +13,29 @@
                 ]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+   Main interface to RITS.
+
+   Given an action and the current state, decide what to do next.
+
+   A single student action may require several actions to respond
+   (printing a message, giving a hint, asking the student etc.).
+
    The history is represented as a list of previous interactions:
 
       student_says(...),
       read_answer,
       hint(...)
 
-   Initially, this list is empty.
+   Initially, this list is empty. Internal actions and history items
+   are used to recall what the current question is. They have the form
+   internal(I) and do not appear to the outside.
 
-   In addition, a single student action may require several RITS
-   actions to respond (printing a message, giving a hint, asking the
-   student etc.).
-
-   The state is therefore a term s(Nexts,Hist). As long as there are
-   elements in Nexts, the next action is taken from Nexts.
+   The state is a term s(Nexts,Hist). As long as there are elements in
+   Nexts, the next action is taken from Nexts.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+%?- rits_start(S0), rits_next_action(1/2+3/4, A, S0, S).
 
 rits_start(s([],[])).
 
@@ -35,8 +43,12 @@ rits_next_action(Action0, Action, S0, s(Nexts,[Action|Hist1])) :-
         S0 = s(Nexts0,Hist0),
         skip_internal(Nexts0, Nexts1, Hist0, Hist1),
         (   Nexts1 = [Action|Nexts] -> true
-        ;   phrase(next_actions(Action0, S0, S), [Action|Nexts1])
+        ;   phrase(next_actions(Action0, S0), [Action|Nexts])
         ).
+
+%?- rits_start(S0), phrase(rits:next_actions(1/2+3/4, S0), As).
+
+%?- phrase(rits:next_actions(1/2+3/4, S0), As).
 
 skip_internal([internal(I)|Nexts], Nexts, H0, [internal(I)|H0]) :- !.
 skip_internal(Nexts, Nexts, H, H).
@@ -130,17 +142,6 @@ to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
 to_rational(A/B, A rdiv B) :- !.
 
-read_answer(T) :-
-        read(R),
-        (   var(R) ->
-            format("    please enter a concrete solution\n"),
-            read_answer(T)
-        ;   integer(R) -> T = R
-        ;   R = A / B -> T = A / B
-        ;   format("    please enter a concrete solution\n"),
-            read_answer(T)
-        ).
-
 solve_with_student(Expression) :- solve_with_student(Expression, [], _).
 
 solve_with_student(Expression, Hist0, Hist) :-
@@ -148,17 +149,17 @@ solve_with_student(Expression, Hist0, Hist) :-
 
 next_actions(Expression, _) -->
         { Expression = cm(X,Y) },
-        [format("\nPlease enter a common multiple of ~w and ~w (solution + \".\" + RET):\n\n", [X,Y]),
+        [format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y]),
          read_answer,
          internal(Expression)].
 next_actions(Expression, _) -->
         { Expression = cancel(X/Y) },
-        [format("\nPlease cancel common divisors in:\n\n~t~10+"),
+        [format("Please cancel common divisors in:\n\n~t~10+"),
          fraction_layout(X/Y),
          read_answer,
          internal(Expression)].
 next_actions(Expression, _) -->
-        [format("\nPlease solve (solution + \".\" + RET):\n\n~t~10+"),
+        [format("Please solve:\n\n~t~10+"),
          fraction_layout(Expression),
          read_answer,
          internal(Expression)].
