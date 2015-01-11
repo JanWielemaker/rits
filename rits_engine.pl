@@ -35,8 +35,6 @@
    Nexts, the next action is taken from Nexts.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-%?- rits_start(S0), rits_next_action(1/2+3/4, A, S0, S).
-
 rits_start(s([],[])).
 
 rits_next_action(Action0, Action, S0, s(Nexts,Hist)) :-
@@ -240,3 +238,8 @@ nexts(Expression0, Answer0, Hist) -->
             [solve(Expression0)]
         ).
 
+/** <examples>
+
+?- rits_start(S0), rits_next_action(solve(1/2+3/4), A, S0, S).
+
+*/
