@@ -190,42 +190,40 @@ nexts(cm(X,Y), Answer, _) -->
                 [cm(X,Y)]
             )
         ).
-nexts(cancel(A/B), Answer0, _, Next) :-
-        (   Answer0 = X / Y ->
-            (   A rdiv B =:= X rdiv Y ->
-                format("    Good, the solution is correct"),
-                (   gcd(X,Y) =:= 1 ->
-                    format(" and also minimal. Very nice!\n\n"),
-                    Next = done
-                ;   format(", but not minimal.\n"),
-                    Next = continue(cancel(X/Y))
+nexts(cancel(A/B), Answer0, _) -->
+        (   { Answer0 = X / Y } ->
+            (   { A rdiv B =:= X rdiv Y } ->
+                [format("Good, the solution is correct")],
+                (   { gcd(X,Y) =:= 1 } ->
+                    [format(" and also minimal. Very nice!\n\n"), done]
+                ;   [format(", but not minimal.\n"), cancel(X/Y)]
                 )
-            ;   format("This is wrong!\n"),
-                Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
+            ;   [format("This is wrong!\n")],
+                help_for_wrong_answer(cancel(A/B), Answer0),
+                [cancel(A/B)]
             )
-        ;   integer(Answer0) ->
-            (   A mod B =:= 0, Answer0 =:= A// B ->
-                format("    Good, the solution is correct and also minimal. Very nice!\n\n"),
-                Next = done
-            ;   format("This is wrong!\n"),
-                Next = excursion(help_for_wrong_answer(cancel(A/B), Answer0))
+        ;   { integer(Answer0) } ->
+            (   { A mod B =:= 0, Answer0 =:= A//B } ->
+                [format("Good, the solution is correct and also minimal. Very nice!\n\n"),done]
+            ;   [format("This is wrong!\n")],
+                help_for_wrong_answer(cancel(A/B), Answer0),
+                [cancel(A/B)]
             )
-        ;   Next = repeat
+        ;   [cancel(A/B)]
         ).
-nexts(Expression0, Answer0, _, Next) :-
-        to_rational(Expression0, Expression),
-        to_rational(Answer0, Answer),
-        (   Expression =:= Answer ->
-            format("    Good, the solution is correct"),
-            Shorter is Answer,
-            (   Shorter = Answer ->
-                format(" and also minimal. Very nice!\n\n"),
-                Next = done
-            ;   format(", but not minimal.\n"),
-                Next = continue(cancel(Answer0))
+nexts(Expression0, Answer0, _) :-
+        { to_rational(Expression0, Expression),
+        to_rational(Answer0, Answer) },
+        (   { Expression =:= Answer } ->
+            [format("Good, the solution is correct")],
+            { Shorter is Answer },
+            (   { Shorter = Answer } ->
+                [format(" and also minimal. Very nice!\n\n"), done]
+            ;   [format(", but not minimal.\n"), cancel(Answer0)]
             )
-        ;   format("    This is wrong.\n"),
-            Next = excursion(help_for_wrong_answer(Expression0, Answer0))
+        ;   [format("This is wrong.\n")],
+            help_for_wrong_answer(Expression0, Answer0),
+            [Expression0]
         ).
 
 run :- solve_with_student(1/2 + 3/4).
