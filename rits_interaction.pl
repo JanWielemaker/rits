@@ -38,7 +38,7 @@ interact_until_done(Action0, S0) :-
         %nl,
         %portray_clause(rits_next_action(Action0, Action1, S0, S)),
         (   Action1 == done -> true
-        ;   (   once(interpret_action(Action1, Action)) -> true
+        ;   (   interpret_action(Action1, Action) -> true
             ;   throw(cannot_handle-Action1)
             ),
             interact_until_done(Action, S)
