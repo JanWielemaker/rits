@@ -39,14 +39,26 @@
 
 rits_start(s([],[])).
 
-rits_next_action(Action0, Action, S0, s(Nexts,[Action|Hist1])) :-
+rits_next_action(Action0, Action, S0, s(Nexts,Hist)) :-
+        (   var(Action0) -> throw(action_uninstantiated)
+        ;   true
+        ),
         S0 = s(Nexts0,Hist0),
-        skip_internal(Nexts0, Nexts1, Hist0, Hist1),
-        (   Nexts1 = [Action|Nexts] -> true
-        ;   %format("next action for: ~w\n", [Action0]),
-            %format("    history: ~w\n\n", [Hist1]),
-            once(phrase(next_actions(Action0, Hist1), [Action|Nexts]))
-        ).
+        (   once(phrase(next_actions(Action0,Hist0), As0)) -> true
+        ;   portray_clause(phrase(next_actions(Action0,Hist0),_)),
+            throw(no_action_found(Action0,Hist0))
+        ),
+        append(As0, Nexts0, Nexts1),
+        %format("the next actions are: ~w\n", [Nexts1]),
+        exclude(is_format, [Action0|Hist0], Hist),
+        nexts_action_nexts(Nexts1, Action, Nexts).
+
+nexts_action_nexts([], done, []).
+nexts_action_nexts([Action|Nexts], Action, Nexts).
+
+is_format(format(_,_)).
+is_format(format(_)).
+is_format(fraction_layout(_)).
 
 %?- rits_start(S0), phrase(rits:next_actions(1/2+3/4, S0), As).
 
@@ -56,15 +68,9 @@ skip_internal([internal(I)|Nexts], Nexts, H0, [internal(I)|H0]) :- !.
 skip_internal(Nexts, Nexts, H, H).
 
 
-do_next(done, Expr, Answer, Hist0, [Expr-Answer|Hist0]).
 do_next(repeat, Expr, Answer, Hist0, Hist) :-
         format("    So, let's try again!\n"),
         solve_with_student(Expr, [Expr-Answer|Hist0], Hist).
-do_next(excursion(Exc), Expr, Answer, Hist0, Hist) :-
-        once(excursion(Exc, Hist0, Hist1)),
-        do_next(repeat, Expr, Answer, Hist1, Hist).
-do_next(continue(Cont), Expr, Answer, Hist0, Hist) :-
-        solve_with_student(Cont, [Expr-Answer|Hist0], Hist).
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,7 +82,7 @@ do_next(continue(Cont), Expr, Answer, Hist0, Hist) :-
 %         false.
 
 
-internal(_).
+internal(internal(_)).
 
 list_internals(Ls, Is) :-
         include(internal, Ls, Is0),
@@ -124,7 +130,8 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
             [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
              format("You can either use that, or find a smaller multiple to make it easier.\n")]
         ;   [format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
-             cm(B,D)]
+             solve(cm(B,D)),
+             format("Now apply this knowledge to the original task!\n")]
         ).
 help_for_wrong_answer(A/B + C/D, Answer0, _) -->
         { to_rational(Answer0, Answer),
@@ -154,26 +161,30 @@ solve_with_student(Expression) :- solve_with_student(Expression, [], _).
 solve_with_student(Expression, Hist0, Hist) :-
         once(solve_with_student_(Expression, Hist0, Hist)).
 
-next_actions(Expression, _) -->
-        { Expression = cm(X,Y) },
-        [format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y]),
-         read_answer,
-         internal(Expression)].
-next_actions(Expression, _) -->
-        { Expression = cancel(X/Y) },
-        [format("Please cancel common divisors in:\n\n~t~10+"),
-         fraction_layout(X/Y),
-         read_answer,
-         internal(Expression)].
+next_actions(next, _)        --> [].
+next_actions(internal(_), _) --> [].
+next_actions(done, _)        --> [].
+% next_actions(format(_,_), _) --> [].
+% next_actions(format(_), _)   --> [].
+% next_actions(fraction_layout(_), _) --> [].
 next_actions(student_answers(A), Hist) -->
         { Hist = [internal(Expr)|_] },
         nexts(Expr, A, Hist),
         !. % commit to first solution
-next_actions(Expression, _) -->
+next_actions(solve(Expression), _) -->
+        solve(Expression),
+        !, % commit to first solution
+        [internal(Expression),read_answer].
+
+solve(cm(X,Y)) -->
+        [format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y])].
+solve(cancel(X/Y)) -->
+        [format("Please cancel common divisors in:\n\n~t~10+"),
+         fraction_layout(X/Y)].
+solve(Expression) -->
         [format("Please solve:\n\n~t~10+"),
-         fraction_layout(Expression),
-         read_answer,
-         internal(Expression)].
+         fraction_layout(Expression)].
+
 
 % so that SWISH can see it is safe
 excursion(help_for_wrong_answer(E, A), Hist0, Hist) :-
@@ -183,18 +194,18 @@ least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
 nexts(cm(X,Y), Answer, Hist) -->
         (   { \+ integer(Answer) } ->
-            [format("A common multiple must be an integer!\n"), cm(X,Y)]
+            [format("A common multiple must be an integer!\n"), solve(cm(X,Y))]
         ;   (   { Answer mod X =:= 0,
                   Answer mod Y =:= 0 } ->
                 [format("Good, the solution is correct")],
                 { least_common_multiple(X, Y, LCM) },
                 (   { Answer =:= LCM } ->
-                    [format(" and also minimal. Very nice!\n\n"), done]
-                ;   [format(". There is also a smaller solution!\n"), done]
+                    [format(" and also minimal. Very nice!\n\n")]
+                ;   [format(". There is also a smaller solution!\n")]
                 )
             ;   [format("This is wrong.\n")],
                 help_for_wrong_answer(cm(X,Y), Answer, Hist),
-                [cm(X,Y)]
+                [solve(cm(X,Y))]
             )
         ).
 nexts(cancel(A/B), Answer0, Hist) -->
@@ -202,35 +213,35 @@ nexts(cancel(A/B), Answer0, Hist) -->
             (   { A rdiv B =:= X rdiv Y } ->
                 [format("Good, the solution is correct")],
                 (   { gcd(X,Y) =:= 1 } ->
-                    [format(" and also minimal. Very nice!\n\n"), done]
-                ;   [format(", but not minimal.\n"), cancel(X/Y)]
+                    [format(" and also minimal. Very nice!\n\n")]
+                ;   [format(", but not minimal.\n"), solve(cancel(X/Y))]
                 )
             ;   [format("This is wrong!\n")],
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
-                [cancel(A/B)]
+                [solve(cancel(A/B))]
             )
         ;   { integer(Answer0) } ->
             (   { A mod B =:= 0, Answer0 =:= A//B } ->
-                [format("Good, the solution is correct and also minimal. Very nice!\n\n"),done]
+                [format("Good, the solution is correct and also minimal. Very nice!\n\n")]
             ;   [format("This is wrong!\n")],
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
-                [cancel(A/B)]
+                [solve(cancel(A/B))]
             )
-        ;   [cancel(A/B)]
+        ;   [solve(cancel(A/B))]
         ).
 nexts(Expression0, Answer0, Hist) -->
         { to_rational(Expression0, Expression),
-        to_rational(Answer0, Answer) },
+          to_rational(Answer0, Answer) },
         (   { Expression =:= Answer } ->
             [format("Good, the solution is correct")],
             { Shorter is Answer },
             (   { Shorter = Answer } ->
-                [format(" and also minimal. Very nice!\n\n"), done]
-            ;   [format(", but not minimal.\n"), cancel(Answer0)]
+                [format(" and also minimal. Very nice!\n\n")]
+            ;   [format(", but not minimal.\n"), solve(cancel(Answer0))]
             )
         ;   [format("This is wrong.\n")],
             help_for_wrong_answer(Expression0, Answer0, Hist),
-            [Expression0]
+            [solve(Expression0)]
         ).
 
 run :- solve_with_student(1/2 + 3/4).
