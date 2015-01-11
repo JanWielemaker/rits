@@ -31,11 +31,13 @@ read_answer(T) :-
 
 solve_with_student(Expression) :-
         rits_start(S0),
-        interact_until_done(Expression, S0).
+        interact_until_done(solve(Expression), S0).
 
 interact_until_done(Action0, S0) :-
         rits_next_action(Action0, Action1, S0, S),
-        (   S == done -> true
+        %nl,
+        %portray_clause(rits_next_action(Action0, Action1, S0, S)),
+        (   Action1 == done -> true
         ;   once(interpret_action(Action1, Action)),
             interact_until_done(Action, S)
         ).
@@ -44,21 +46,26 @@ interact_until_done(Action0, S0) :-
    Interpret RITS actions.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-interpret_action(A, _) :-
-        \+ functor(A, format, _),
-        format("INTERPRETING: ~w\n", [A]), false.
-interpret_action(format(F,As), _)                 :- format(F, As).
-interpret_action(format(F), _)                    :- format(F).
+% interpret_action(A, _) :-
+%         \+ functor(A, format, _),
+%         format("\n\nINTERPRETING: ~w\n\n", [A]), false.
+interpret_action(format(F,As), next)       :- format(F, As).
+interpret_action(format(F), next)          :- format(F).
+interpret_action(fraction_layout(F), next) :- fraction_layout(F).
 interpret_action(read_answer, student_answers(T)) :- nl, read_answer(T).
-interpret_action(fraction_layout(F), _)           :- fraction_layout(F).
 interpret_action(A, A).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 (setq ediprolog-prefix "")
 
+?- solve_with_student(cm(2,4)).
+
 ?- solve_with_student(1/2+3/4).
 
+%?- gtrace, rits_engine:next_actions(student_answers(4/6), [next, next, solve(1/2+3/4)], _, Ys).
+
+   
 ?- gtrace, rits_engine:next_actions(student_answers(3/4), [internal(1/2+3/4),read_answer], As, Rs). %
 
 ?- gtrace, solve_with_student(1/2+3/4).
