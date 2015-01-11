@@ -37,7 +37,9 @@ interact_until_done(Action0, S0) :-
         rits_next_action(Action0, Action1, S0, S),
         %nl,
         %portray_clause(rits_next_action(Action0, Action1, S0, S)),
-        (   Action1 == done -> true
+        (   Action1 == done ->
+            rits_history(S, Hist),
+            format("the interaction history: ~q\n", [Hist])
         ;   (   interpret_action(Action1, Action) -> true
             ;   throw(cannot_handle-Action1)
             ),
@@ -66,10 +68,4 @@ interpret_action(solve(Expr), solve(Expr)).
 
 ?- solve_with_student(1/2+3/4).
 
-%?- gtrace, rits_engine:next_actions(student_answers(4/6), [next, next, solve(1/2+3/4)], _, Ys).
-
-   
-?- gtrace, rits_engine:next_actions(student_answers(3/4), [internal(1/2+3/4),read_answer], As, Rs). %
-
-?- gtrace, solve_with_student(1/2+3/4).
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
