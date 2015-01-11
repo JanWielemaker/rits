@@ -8,8 +8,9 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :- module(rits_engine, [
-                        rits_start/1, % -S0
-                        rits_next_action/4 % +Action0, -Action, +S0, -S
+                        rits_start/1,       % -S0
+                        rits_next_action/4, % +Action0, -Action, +S0, -S
+                        rits_history/2      % +S, -History
                        ]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,6 +41,8 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 rits_start(s([],[])).
+
+rits_history(s(_,Hist0), Hist) :- reverse(Hist0, Hist0).
 
 rits_next_action(Action0, Action, S0, S) :-
         rits_next_action_(Action0, Action1, S0, S1),
