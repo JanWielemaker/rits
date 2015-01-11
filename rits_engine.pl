@@ -7,10 +7,10 @@
    R   RR  II     TT   SSSSSSS
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-:- module(rits, [
-                 rits_start/1,         % -S0
-                 rits_next_action/4    % +Action0, -Action, +S0, -S
-                ]).
+:- module(rits_engine, [
+                        rits_start/1, % -S0
+                        rits_next_action/4 % +Action0, -Action, +S0, -S
+                       ]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -23,7 +23,7 @@
 
    The history is represented as a list of previous interactions:
 
-      student_says(...),
+      student_answers(...),
       read_answer,
       hint(...)
 
