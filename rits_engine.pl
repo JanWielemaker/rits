@@ -43,7 +43,7 @@ rits_next_action(Action0, Action, S0, s(Nexts,[Action|Hist1])) :-
         S0 = s(Nexts0,Hist0),
         skip_internal(Nexts0, Nexts1, Hist0, Hist1),
         (   Nexts1 = [Action|Nexts] -> true
-        ;   phrase(next_actions(Action0, S0), [Action|Nexts])
+        ;   once(phrase(next_actions(Action0, S0), [Action|Nexts]))
         ).
 
 %?- rits_start(S0), phrase(rits:next_actions(1/2+3/4, S0), As).
@@ -158,6 +158,10 @@ next_actions(Expression, _) -->
          fraction_layout(X/Y),
          read_answer,
          internal(Expression)].
+next_actions(student_answers(A), Hist) -->
+        { Hist = [internal(Expr)|_] },
+        nexts(Expr, A, Hist),
+        !. % commit to first solution
 next_actions(Expression, _) -->
         [format("Please solve:\n\n~t~10+"),
          fraction_layout(Expression),
@@ -170,26 +174,23 @@ excursion(help_for_wrong_answer(E, A), Hist0, Hist) :-
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
-next(Expression, Answer, Hist, Next) :-
-        once(next_(Expression, Answer, Hist, Next)).
-
-next_(cm(X,Y), Answer, _, Next) :-
-        (   \+ integer(Answer) -> Next = repeat,
-            format("    A common multiple must be an integer!\n")
-        ;   (   Answer mod X =:= 0,
-                Answer mod Y =:= 0 ->
-                format("    Good, the solution is correct"),
-                least_common_multiple(X, Y, LCM),
-                (   Answer =:= LCM -> format(" and also minimal. Very nice!\n\n"),
-                    Next = done
-                ;   format(". There is also a smaller solution!\n"),
-                    Next = done
+nexts(cm(X,Y), Answer, _) -->
+        (   { \+ integer(Answer) } ->
+            [format("A common multiple must be an integer!\n"), cm(X,Y)]
+        ;   (   { Answer mod X =:= 0,
+                  Answer mod Y =:= 0 } ->
+                [format("Good, the solution is correct")],
+                { least_common_multiple(X, Y, LCM) },
+                (   { Answer =:= LCM } ->
+                    [format(" and also minimal. Very nice!\n\n"), done]
+                ;   [format(". There is also a smaller solution!\n"), done]
                 )
-            ;   format("    This is wrong.\n"),
-                Next = excursion(help_for_wrong_answer(cm(X,Y), Answer))
+            ;   [format("This is wrong.\n")],
+                help_for_wrong_answer(cm(X,Y), Answer),
+                [cm(X,Y)]
             )
         ).
-next_(cancel(A/B), Answer0, _, Next) :-
+nexts(cancel(A/B), Answer0, _, Next) :-
         (   Answer0 = X / Y ->
             (   A rdiv B =:= X rdiv Y ->
                 format("    Good, the solution is correct"),
@@ -211,7 +212,7 @@ next_(cancel(A/B), Answer0, _, Next) :-
             )
         ;   Next = repeat
         ).
-next_(Expression0, Answer0, _, Next) :-
+nexts(Expression0, Answer0, _, Next) :-
         to_rational(Expression0, Expression),
         to_rational(Answer0, Answer),
         (   Expression =:= Answer ->
