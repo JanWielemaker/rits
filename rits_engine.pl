@@ -67,11 +67,6 @@ is_format(format(_,_)).
 is_format(format(_)).
 is_format(fraction_layout(_)).
 
-do_next(repeat, Expr, Answer, Hist0, Hist) :-
-        format("    So, let's try again!\n"),
-        solve_with_student(Expr, [Expr-Answer|Hist0], Hist).
-
-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
