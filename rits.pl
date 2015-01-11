@@ -217,5 +217,7 @@ run :- solve_with_student(1/2 + 3/4).
 
 ?- solve_with_student(1/2 + 3/4).
 
+?- solve_with_student(1/2 + 1/2).
+
 ?- solve_with_student(cancel(10/8)).
 */
