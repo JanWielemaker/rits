@@ -113,7 +113,7 @@ help_for_wrong_answer(cm(X,Y), A, _) -->
         [format("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X])].
 help_for_wrong_answer(cm(X,Y), A, _) -->
         { A mod Y =\= 0 },
-        [format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y])].
+        [format("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y])].
 
 % Help for fractions
 
@@ -163,9 +163,6 @@ to_rational(A/B, A rdiv B) :- !.
 next_actions(next, _)        --> [].
 next_actions(internal(_), _) --> [].
 next_actions(done, _)        --> [].
-% next_actions(format(_,_), _) --> [].
-% next_actions(format(_), _)   --> [].
-% next_actions(fraction_layout(_), _) --> [].
 next_actions(student_answers(A), Hist) -->
         { Hist = [internal(Expr)|_] },
         nexts(Expr, A, Hist),
