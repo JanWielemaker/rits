@@ -156,10 +156,6 @@ to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
 to_rational(A/B, A rdiv B) :- !.
 
-solve_with_student(Expression) :- solve_with_student(Expression, [], _).
-
-solve_with_student(Expression, Hist0, Hist) :-
-        once(solve_with_student_(Expression, Hist0, Hist)).
 
 next_actions(next, _)        --> [].
 next_actions(internal(_), _) --> [].
@@ -244,13 +240,3 @@ nexts(Expression0, Answer0, Hist) -->
             [solve(Expression0)]
         ).
 
-run :- solve_with_student(1/2 + 3/4).
-
-/** <examples>
-
-?- solve_with_student(1/2 + 3/4).
-
-?- solve_with_student(1/2 + 1/2).
-
-?- solve_with_student(cancel(10/8)).
-*/
