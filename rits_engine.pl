@@ -54,7 +54,7 @@ rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
         ;   true
         ),
         S0 = s(Nexts0,Hist0),
-        (   once(phrase(next_actions(Action0,Hist0), As0)) -> true
+        (   phrase(next_actions(Action0,Hist0), As0) -> true
         ;   portray_clause(phrase(next_actions(Action0,Hist0),_)),
             throw(no_action_found(Action0,Hist0))
         ),
