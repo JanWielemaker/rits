@@ -41,7 +41,15 @@
 
 rits_start(s([],[])).
 
-rits_next_action(Action0, Action, S0, s(Nexts,Hist)) :-
+rits_next_action(Action0, Action, S0, S) :-
+        rits_next_action_(Action0, Action1, S0, S1),
+        (   internal(Action1) ->
+            rits_next_action(Action1, Action, S1, S)
+        ;   Action = Action1,
+            S = S1
+        ).
+
+rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
         (   var(Action0) -> throw(action_uninstantiated)
         ;   true
         ),
