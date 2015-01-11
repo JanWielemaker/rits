@@ -70,10 +70,6 @@ is_format(format(_,_)).
 is_format(format(_)).
 is_format(fraction_layout(_)).
 
-%?- rits_start(S0), phrase(rits:next_actions(1/2+3/4, S0), As).
-
-%?- phrase(rits:next_actions(1/2+3/4, S0), As).
-
 skip_internal([internal(I)|Nexts], Nexts, H0, [internal(I)|H0]) :- !.
 skip_internal(Nexts, Nexts, H, H).
 
@@ -111,7 +107,7 @@ help_for_wrong_answer(cm(X,Y), _, Hist) -->
         { list_internals(Hist, [cm(X,Y),cm(X,Y)|_]) },
         [format("I see you are having a hard time with this.\n")],
         { CM is X*Y },
-        [format("Hint: ~w (~w * ~w) is a possible solution.\n", [CM,X,Y])].
+        [format("Hint: ~w * ~w = ~w is a possible solution.\n", [X,Y,CM])].
 help_for_wrong_answer(cm(X,Y), A, _) -->
         { A mod X =\= 0 },
         [format("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X])].
@@ -160,12 +156,9 @@ help_for_wrong_answer(_, _, _) -->
         [format("Unfortunately, I cannot give any useful hints here.\n")].
 
 
-format_(List, Args) --> { format(codes(Out), List, Args) }, Out.
-
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
 to_rational(A/B, A rdiv B) :- !.
-
 
 next_actions(next, _)        --> [].
 next_actions(internal(_), _) --> [].
