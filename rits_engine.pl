@@ -73,67 +73,72 @@ do_next(continue(Cont), Expr, Answer, Hist0, Hist) :-
 %         format("HISTORY so far: ~w\n", [Hist0]),
 %         false.
 
+
+internal(_).
+
+list_internals(Ls, Is) :-
+        include(internal, Ls, Is0),
+        maplist(arg(1), Is0, Is).
+
 % Help for cancellation
 
-help_for_wrong_answer(cancel(A/B), _, Hist, Hist) :-
-        (   Hist = [cancel(Expr)-_,cancel(Expr)-_|_],
-            format("    I see you are having a hard time with this.\n"),
-            format("    Hint: Find a common divisor of ~w and ~w.\n", [A,B])
-        ;   true
-        ).
+help_for_wrong_answer(cancel(A/B), _, Hist) -->
+        { list_internals(Hist, [cancel(A/B),cancel(A/B)|_]) },
+        [format("I see you are having a hard time with this.\n"),
+         format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])].
 
 % Help for common multiple
 
-help_for_wrong_answer(cm(X,Y), _, Hist, Hist) :-
-        Hist = [cm(X,Y)-_,cm(X,Y)-_|_],
-        format("    I see you are having a hard time with this.\n"),
-        least_common_multiple(X, Y, CM),
-        format("    Hint: ~w is a possible solution.\n", [CM]).
-help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
-        A mod X =\= 0,
-        format("    ~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X]).
-help_for_wrong_answer(cm(X,Y), A, Hist, Hist) :-
-        A mod Y =\= 0,
-        format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y]).
+help_for_wrong_answer(cm(X,Y), _, Hist) -->
+        { list_internals(Hist, [cm(X,Y),cm(X,Y)|_],
+        [format("I see you are having a hard time with this.\n")],
+        { CM is X*Y },
+        [format("    Hint: ~w (~w * ~w) is a possible solution.\n", [CM,X,Y])].
+help_for_wrong_answer(cm(X,Y), A, _) :-
+        { A mod X =\= 0 },
+        [format("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X])].
+help_for_wrong_answer(cm(X,Y), A, _) :-
+        { A mod Y =\= 0 },
+        [format("    ~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y])].
 
 % Help for fractions
 
-help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
-        least_common_multiple(B, D, Y),
-        format("    The denominator is suitable, but the numerator is wrong!\n").
-help_for_wrong_answer(_/B + _/D, _/Y, Hist, Hist) :-
-        Y mod B =:= 0,
-        Y mod D =:= 0,
-        format("    The denominator is suitable, but the numerator is wrong!\n"),
-        format("    Use a smaller common multiple as denominator to make this easier.\n").
-help_for_wrong_answer(A/B + C/D, X / _, Hist0, Hist) :-
-        B =\= D,
-        X =:= A + C,
-        format("    You cannot just sum the numerators when the denominators are different!\n\n"),
-        (   member(cm(B,D)-Answer, Hist0), least_common_multiple(B,D,Answer) ->
-            format("    Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
-            format("    First rewrite the fractions so that the denominator is ~w for both, then add.\n", [Answer])
-        ;   member(cm(B,D)-Answer, Hist0), Answer mod B =:= 0, Answer mod D =:= 0 ->
-            format("    Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
-            format("    You can either use that, or find a smaller multiple to make it easier.\n")
-        ;   format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
-            solve_with_student(cm(B,D), Hist0, Hist)
+help_for_wrong_answer(_/B + _/D, _/Y, _) -->
+        { least_common_multiple(B, D, Y) },
+        [format("The denominator is suitable, but the numerator is wrong!\n")].
+help_for_wrong_answer(_/B + _/D, _/Y, _) -->
+        { Y mod B =:= 0,
+          Y mod D =:= 0 },
+        [format("The denominator is suitable, but the numerator is wrong!\n"),
+         format("Use a smaller common multiple as denominator to make this easier.\n")].
+help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
+        { B =\= D,
+          X =:= A + C },
+        [format("You cannot just sum the numerators when the denominators are different!\n\n")],
+        (   { member(cm(B,D)-Answer, Hist), least_common_multiple(B,D,Answer) } ->
+            [format("Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
+             format("First rewrite the fractions so that the denominator is ~w for both, then add.\n", [Answer])]
+        ;   { member(cm(B,D)-Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 } ->
+            [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
+             format("You can either use that, or find a smaller multiple to make it easier.\n")]
+        ;   [format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
+             cm(B,D)]
         ).
-help_for_wrong_answer(A/B + C/D, Answer0, Hist, Hist) :-
-        to_rational(Answer0, Answer),
-        Answer =:= (A + C) rdiv (B + D),
-        format("    You should not sum the denominators, but only the numerators!\n").
-help_for_wrong_answer(_/B + _/_, _ / Y, Hist, Hist) :-
-        Y mod B =\= 0,
-        format("    ~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B]).
-help_for_wrong_answer(_/_ + _/D, _ / Y, Hist, Hist) :-
-        Y mod D =\= 0,
-        format("    ~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D]).
+help_for_wrong_answer(A/B + C/D, Answer0, _) -->
+        { to_rational(Answer0, Answer),
+          Answer =:= (A + C) rdiv (B + D) },
+        [format("You should not sum the denominators, but only the numerators!\n")].
+help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
+        { Y mod B =\= 0 },
+        [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B])].
+help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
+        { Y mod D =\= 0 },
+        [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D])].
 
 % Fallback
 
-help_for_wrong_answer(_, _, Hist, Hist) :-
-        format("    Unfortunately, I cannot give any useful hints here.\n").
+help_for_wrong_answer(_, _, _) -->
+        [format("Unfortunately, I cannot give any useful hints here.\n")].
 
 
 format_(List, Args) --> { format(codes(Out), List, Args) }, Out.
