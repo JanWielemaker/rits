@@ -69,10 +69,6 @@ is_format(format(_,_)).
 is_format(format(_)).
 is_format(fraction_layout(_)).
 
-skip_internal([internal(I)|Nexts], Nexts, H0, [internal(I)|H0]) :- !.
-skip_internal(Nexts, Nexts, H, H).
-
-
 do_next(repeat, Expr, Answer, Hist0, Hist) :-
         format("    So, let's try again!\n"),
         solve_with_student(Expr, [Expr-Answer|Hist0], Hist).
