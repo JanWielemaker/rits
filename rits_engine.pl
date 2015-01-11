@@ -43,7 +43,9 @@ rits_next_action(Action0, Action, S0, s(Nexts,[Action|Hist1])) :-
         S0 = s(Nexts0,Hist0),
         skip_internal(Nexts0, Nexts1, Hist0, Hist1),
         (   Nexts1 = [Action|Nexts] -> true
-        ;   once(phrase(next_actions(Action0, S0), [Action|Nexts]))
+        ;   %format("next action for: ~w\n", [Action0]),
+            %format("    history: ~w\n\n", [Hist1]),
+            once(phrase(next_actions(Action0, Hist1), [Action|Nexts]))
         ).
 
 %?- rits_start(S0), phrase(rits:next_actions(1/2+3/4, S0), As).
@@ -121,7 +123,7 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
         ;   { member(cm(B,D)-Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 } ->
             [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
              format("You can either use that, or find a smaller multiple to make it easier.\n")]
-        ;   [format("    Let us first find a common multiple of ~w and ~w!\n", [B,D]),
+        ;   [format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
              cm(B,D)]
         ).
 help_for_wrong_answer(A/B + C/D, Answer0, _) -->
@@ -179,7 +181,7 @@ excursion(help_for_wrong_answer(E, A), Hist0, Hist) :-
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
-nexts(cm(X,Y), Answer, _) -->
+nexts(cm(X,Y), Answer, Hist) -->
         (   { \+ integer(Answer) } ->
             [format("A common multiple must be an integer!\n"), cm(X,Y)]
         ;   (   { Answer mod X =:= 0,
@@ -191,11 +193,11 @@ nexts(cm(X,Y), Answer, _) -->
                 ;   [format(". There is also a smaller solution!\n"), done]
                 )
             ;   [format("This is wrong.\n")],
-                help_for_wrong_answer(cm(X,Y), Answer),
+                help_for_wrong_answer(cm(X,Y), Answer, Hist),
                 [cm(X,Y)]
             )
         ).
-nexts(cancel(A/B), Answer0, _) -->
+nexts(cancel(A/B), Answer0, Hist) -->
         (   { Answer0 = X / Y } ->
             (   { A rdiv B =:= X rdiv Y } ->
                 [format("Good, the solution is correct")],
@@ -204,19 +206,19 @@ nexts(cancel(A/B), Answer0, _) -->
                 ;   [format(", but not minimal.\n"), cancel(X/Y)]
                 )
             ;   [format("This is wrong!\n")],
-                help_for_wrong_answer(cancel(A/B), Answer0),
+                help_for_wrong_answer(cancel(A/B), Answer0, Hist),
                 [cancel(A/B)]
             )
         ;   { integer(Answer0) } ->
             (   { A mod B =:= 0, Answer0 =:= A//B } ->
                 [format("Good, the solution is correct and also minimal. Very nice!\n\n"),done]
             ;   [format("This is wrong!\n")],
-                help_for_wrong_answer(cancel(A/B), Answer0),
+                help_for_wrong_answer(cancel(A/B), Answer0, Hist),
                 [cancel(A/B)]
             )
         ;   [cancel(A/B)]
         ).
-nexts(Expression0, Answer0, _) :-
+nexts(Expression0, Answer0, Hist) -->
         { to_rational(Expression0, Expression),
         to_rational(Answer0, Answer) },
         (   { Expression =:= Answer } ->
@@ -227,7 +229,7 @@ nexts(Expression0, Answer0, _) :-
             ;   [format(", but not minimal.\n"), cancel(Answer0)]
             )
         ;   [format("This is wrong.\n")],
-            help_for_wrong_answer(Expression0, Answer0),
+            help_for_wrong_answer(Expression0, Answer0, Hist),
             [Expression0]
         ).
 
