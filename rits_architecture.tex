@@ -8,12 +8,18 @@
 
 \vspace{1cm}
 \noindent
-RITS is accessible via two API calls:
+To use RITS, add the following line to your Prolog code:
+
+\bigskip
+\textbf{:- use\_module(rits\_engine).}
+\bigskip
+
+\noindent RITS is accessible via two API calls:
 
 \begin{itemize}
 \item \textbf{rits\_start(-Start)}\\\textbf{Start} is unified with a
-  Prolog term that represents the initial state of RITS, before it has
-  processed any user actions.
+  Prolog term that represents the initial state of RITS, before the
+  system has received any user actions.
 
 \item \textbf{rits\_next\_action(+A0, -A, +S0, -S)}\\
   This predicate relates a user action \textbf{A0} and a RITS state
