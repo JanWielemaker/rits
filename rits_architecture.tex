@@ -1,0 +1,29 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\begin{document}
+\noindent
+\begin{center}
+\Large\textbf{RITS System Architecture}
+\end{center}
+
+\vspace{1cm}
+\noindent
+RITS is accessible via two API calls:
+
+\begin{itemize}
+\item \textbf{rits\_start(-Start)}\\\textbf{Start} is unified with a
+  Prolog term that represents the initial state of RITS, before it has
+  processed any user actions.
+
+\item \textbf{rits\_next\_action(+A0, -A, +S0, -S)}\\
+  This predicate relates a user action \textbf{A0} and a RITS state
+  \textbf{S0} to the RITS action \textbf{A} and next state~\textbf{S}.
+\end{itemize}
+
+These predicates are completely \textit{pure}: They no not emit output
+in any way, do not write any files, and do not query the user in any
+way. Therefore, they can be quite safely executed in a hosting
+environment.
+
+\end{document}
+
