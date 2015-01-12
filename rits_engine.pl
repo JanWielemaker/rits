@@ -119,9 +119,9 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist0) -->
         ;   { member(cm(B,D)=Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 } ->
             [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
              format("You can either use that, or find a smaller multiple to make it easier.\n")]
-        ;   [format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
-             solve(cm(B,D)),
-             format("Now apply this knowledge to the original task!\n")]
+        ;   subproblem([format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
+                        solve(cm(B,D)),
+                        format("Now apply this knowledge to the original task!\n")])
         ).
 help_for_wrong_answer(A/B + C/D, Answer0, _) -->
         { to_rational(Answer0, Answer),
@@ -139,6 +139,7 @@ help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
 help_for_wrong_answer(_, _, _) -->
         [format("Unfortunately, I cannot give any useful hints here.\n")].
 
+subproblem(Ls) --> [enter], Ls, [exit].
 
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
