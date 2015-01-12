@@ -53,6 +53,8 @@ interact_until_done(Action0, S0) :-
 % interpret_action(A, _) :-
 %         \+ functor(A, format, _),
 %         format("\n\nINTERPRETING: ~w\n\n", [A]), false.
+interpret_action(enter, next).
+interpret_action(exit, next).
 interpret_action(format(F,As), next)       :- format(F, As).
 interpret_action(format(F), next)          :- format(F).
 interpret_action(fraction_layout(F), next) :- fraction_layout(F).
@@ -63,6 +65,8 @@ interpret_action(solve(Expr), solve(Expr)).
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 (setq ediprolog-prefix "")
+
+?- solve_with_student(cancel(4/8)).
 
 ?- solve_with_student(cm(2,4)).
 
