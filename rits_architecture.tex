@@ -43,6 +43,8 @@ give answers etc.
     \textbf{solve(Expr)} & Tell RITS that the task for the student is to simplify  the expression \textbf{Expr}.\\
     \textbf{student\_answers(T)} & Tell RITS that the student has responded with \textbf{T}. This action is only admissible if the directly preceding RITS action was \textbf{read\_answer}.\\
     \textbf{next} & Query RITS for its next action. \\
+    \textbf{skip} & The student wants to skip solving the subproblem that is
+    currently in progress. (\textit{TODO})\\
     \hline
   \end{tabular}
 \caption{Admissible user actions}
