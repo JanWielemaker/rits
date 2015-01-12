@@ -53,8 +53,7 @@ rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
         ),
         S0 = s(Nexts0,Hist0),
         (   phrase(next_actions(Action0,Hist0,Hist), As0) -> true
-        ;   portray_clause(phrase(next_actions(Action0,Hist0,Hist),_)),
-            throw(no_action_found(Action0,Hist0,Hist))
+        ;   throw(no_action_found(Action0,Hist0,Hist))
         ),
         append(As0, Nexts0, Nexts1),
         %format("the next actions are: ~w\n", [Nexts1]),
