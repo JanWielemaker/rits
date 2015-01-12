@@ -63,10 +63,6 @@ rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
 nexts_action_nexts([], done, []).
 nexts_action_nexts([Action|Nexts], Action, Nexts).
 
-is_format(format(_,_)).
-is_format(format(_)).
-is_format(fraction_layout(_)).
-
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    The main logic for helping with wrong answers.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
