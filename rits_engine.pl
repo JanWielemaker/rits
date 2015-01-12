@@ -15,7 +15,7 @@
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-   Main interface to RITS.
+   The interface to RITS.
 
    Given an action and the current state, decide what to do next.
 
