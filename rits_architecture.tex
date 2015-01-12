@@ -30,7 +30,39 @@ These predicates are completely \textit{pure}: They no not emit any
 output, do not write any files, and do not query the user in any way.
 Therefore, they can be quite safely executed in a hosting environment.
 
-A user action is one of (\textit{more to follow})
+User actions are described in Table~\ref{tab:useractions}. RITS
+actions are described in Table~\ref{tab:ritsactions}.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{cp{7cm}}
+    \hline
+    \textbf{solve(Expr)} & Tell RITS that the task for the student is to simplify  the expression \textbf{Expr}.\\
+    \textbf{student\_answers(T)} & Tell RITS that the student has responded with \textbf{T}. This action is only admissible if the directly preceding RITS action was \textbf{read\_answer}.\\
+    \textbf{next} & Query RITS for its next action. \\
+    \hline
+  \end{tabular}
+\caption{Admissible user actions}
+  \label{tab:useractions}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{cp{7cm}}
+    \hline
+    \textbf{enter} & Start of a subproblem that the student must solve.\\
+    \textbf{exit} & The most recently spawned subproblem was solved.\\
+    \textbf{format(F)} & The string \textbf{F} is to be displayed.\\
+    \textbf{format(F,As)} & The format string \textbf{F} is to be displayed. \textbf{As} is a list of arguments that are output, in sequence, in place of each \texttt{\~w} that appears in \textbf{F}.\\
+    \textbf{read\_answer} & The student is to be queried for a an answer.\\
+    \textbf{fraction\_layout(T)} & The term \textbf{T} is to be displayed. (\textit{to be refined})\\
+    \textbf{solve(Expr)} & The student should be given the task to simplify \textbf{Expr}.\\
+    \hline
+  \end{tabular}
+\caption{Valid RITS actions}
+  \label{tab:ritsactions}
+\end{table}
+
 
 \vspace{0.7cm}
 
