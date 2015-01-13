@@ -20,6 +20,7 @@
 
 :- use_module(rits_fractions).
 :- use_module(rits_common_multiple).
+:- use_module(rits_multiple_choice).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
