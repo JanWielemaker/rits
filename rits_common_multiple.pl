@@ -19,7 +19,7 @@ rits:help_for_wrong_answer(cm(X,Y), A, _) -->
         [format("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y])].
 
 
-rits:nexts(cm(X,Y), Answer, Hist) -->
+rits:actions(cm(X,Y), Answer, Hist) -->
         (   { \+ integer(Answer) } ->
             [format("A common multiple must be an integer!\n"), solve(cm(X,Y))]
         ;   (   { Answer mod X =:= 0,
