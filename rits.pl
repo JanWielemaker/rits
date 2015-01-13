@@ -96,6 +96,7 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         solve(Expression),
         !, % commit to first solution
         [internal(Expression),read_answer].
+next_actions(module(T), Hist, Hist) --> [T].
 
 
 /** <examples>
