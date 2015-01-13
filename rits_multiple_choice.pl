@@ -1,6 +1,6 @@
 :- module(rits_multiple_choice, []).
 
-rits:solve(mchoice(Text,Options,Solution)) -->
+rits:solve(mchoice(Text,Options,_)) -->
         [translation(Text),
          choices(Options)].
 
