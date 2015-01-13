@@ -1,22 +1,27 @@
 
 :- use_module(rits_common_multiple).
 
-solve(A/B + C/D) -->
+rits:solve(A/B + C/D) -->
         [format("Please solve:\n\n~t~10+"),
          fraction_layout(Expression)].
-solve(cancel(X/Y)) -->
+rits:solve(cancel(X/Y)) -->
         [format("Please cancel common divisors in:\n\n~t~10+"),
          fraction_layout(X/Y)].
 
-help_for_wrong_answer(_/B + _/D, _/Y, _) -->
+
+rits:help_for_wrong_answer(cancel(A/B), _, Hist) -->
+        { list_internals(Hist, [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_]) },
+        [format("I see you are having a hard time with this.\n"),
+         format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])].
+rits:help_for_wrong_answer(_/B + _/D, _/Y, _) -->
         { least_common_multiple(B, D, Y) },
         [format("The denominator is suitable, but the numerator is wrong!\n")].
-help_for_wrong_answer(_/B + _/D, _/Y, _) -->
+rits:help_for_wrong_answer(_/B + _/D, _/Y, _) -->
         { Y mod B =:= 0,
           Y mod D =:= 0 },
         [format("The denominator is suitable, but the numerator is wrong!\n"),
          format("Use a smaller common multiple as denominator to make this easier.\n")].
-help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
+rits:help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
         { B =\= D,
           X =:= A + C },
         [format("You cannot just sum the numerators when the denominators are different!\n\n")],
@@ -30,14 +35,14 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
                         solve(cm(B,D)),
                         format("Now apply this knowledge to the original task!\n")])
         ).
-help_for_wrong_answer(A/B + C/D, Answer0, _) -->
+rits:help_for_wrong_answer(A/B + C/D, Answer0, _) -->
         { to_rational(Answer0, Answer),
           Answer =:= (A + C) rdiv (B + D) },
         [format("You should not sum the denominators, but only the numerators!\n")].
-help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
+rits:help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
         { Y mod B =\= 0 },
         [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B])].
-help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
+rits:help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
         [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D])].
 
@@ -62,7 +67,7 @@ rits:nexts(cancel(A/B), Answer0, Hist) -->
             )
         ;   [solve(cancel(A/B))]
         ).
-nexts(Expression0, Answer0, Hist) -->
+rits:nexts(Expression0, Answer0, Hist) -->
         { Expression0 = (A/B + C/D) },
         { to_rational(Expression0, Expression),
           to_rational(Answer0, Answer) },
