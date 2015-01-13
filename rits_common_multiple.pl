@@ -7,7 +7,7 @@ rits:solve(cm(X,Y)) -->
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
 rits:help_for_wrong_answer(cm(X,Y), _, Hist) -->
-        { list_internals(Hist, [cm(X,Y)=_,cm(X,Y)=_,cm(X,Y)=_|_]) },
+        { Hist = [cm(X,Y)=_,cm(X,Y)=_,cm(X,Y)=_|_] },
         [format("I see you are having a hard time with this.\n")],
         { CM is X*Y },
         [format("Hint: ~w * ~w = ~w is a possible solution.\n", [X,Y,CM])].
