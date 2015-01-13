@@ -37,7 +37,6 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
         ;   [solve(cancel(A/B))]
         ).
 rits:actions(Expression0, Answer0, Hist) -->
-        { Expression0 = (_/_ + _/_) },
         { to_rational(Expression0, Expression),
           to_rational(Answer0, Answer) },
         (   { Expression =:= Answer } ->
