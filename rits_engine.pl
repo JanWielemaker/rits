@@ -7,11 +7,11 @@
    R   RR  II     TT   SSSSSSS
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-:- module(rits_engine, [
-                        rits_start/1,       % -S0
-                        rits_next_action/4, % +Action0, -Action, +S0, -S
-                        rits_history/2      % +S, -History
-                       ]).
+:- module(rits, [
+                 rits_start/1,       % -S0
+                 rits_next_action/4, % +Action0, -Action, +S0, -S
+                 rits_history/2      % +S, -History
+                ]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
