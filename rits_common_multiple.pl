@@ -31,7 +31,7 @@ rits:actions(cm(X,Y), Answer, Hist) -->
                 ;   [format(". There is also a smaller solution!\n")]
                 )
             ;   [format("This is wrong.\n")],
-                help_for_wrong_answer(cm(X,Y), Answer, Hist),
+                rits:help_for_wrong_answer(cm(X,Y), Answer, Hist),
                 [solve(cm(X,Y))]
             )
         ).
