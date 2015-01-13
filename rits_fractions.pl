@@ -1,4 +1,6 @@
 
+:- use_module(rits_common_multiple).
+
 solve(A/B + C/D) -->
         [format("Please solve:\n\n~t~10+"),
          fraction_layout(Expression)].
@@ -39,3 +41,25 @@ help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
 help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
         [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D])].
+
+rits:nexts(cancel(A/B), Answer0, Hist) -->
+        (   { Answer0 = X / Y } ->
+            (   { A rdiv B =:= X rdiv Y } ->
+                [format("Good, the solution is correct")],
+                (   { gcd(X,Y) =:= 1 } ->
+                    [format(" and also minimal. Very nice!\n\n")]
+                ;   [format(", but not minimal.\n"), solve(cancel(X/Y))]
+                )
+            ;   [format("This is wrong!\n")],
+                help_for_wrong_answer(cancel(A/B), Answer0, Hist),
+                [solve(cancel(A/B))]
+            )
+        ;   { integer(Answer0) } ->
+            (   { A mod B =:= 0, Answer0 =:= A//B } ->
+                [format("Good, the solution is correct and also minimal. Very nice!\n\n")]
+            ;   [format("This is wrong!\n")],
+                help_for_wrong_answer(cancel(A/B), Answer0, Hist),
+                [solve(cancel(A/B))]
+            )
+        ;   [solve(cancel(A/B))]
+        ).
