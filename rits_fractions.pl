@@ -46,7 +46,7 @@ rits:help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
         [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D])].
 
-rits:nexts(cancel(A/B), Answer0, Hist) -->
+rits:actions(cancel(A/B), Answer0, Hist) -->
         (   { Answer0 = X / Y } ->
             (   { A rdiv B =:= X rdiv Y } ->
                 [format("Good, the solution is correct")],
@@ -67,7 +67,7 @@ rits:nexts(cancel(A/B), Answer0, Hist) -->
             )
         ;   [solve(cancel(A/B))]
         ).
-rits:nexts(Expression0, Answer0, Hist) -->
+rits:actions(Expression0, Answer0, Hist) -->
         { Expression0 = (A/B + C/D) },
         { to_rational(Expression0, Expression),
           to_rational(Answer0, Answer) },
