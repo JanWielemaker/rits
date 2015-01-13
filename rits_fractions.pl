@@ -1,9 +1,9 @@
 
-:- use_module(rits_common_multiple).
+:- module(rits_fractions, []).
 
 rits:solve(A/B + C/D) -->
         [format("Please solve:\n\n~t~10+"),
-         fraction_layout(Expression)].
+         fraction_layout(A/B + C/D)].
 rits:solve(cancel(X/Y)) -->
         [format("Please cancel common divisors in:\n\n~t~10+"),
          fraction_layout(X/Y)].
@@ -68,7 +68,7 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
         ;   [solve(cancel(A/B))]
         ).
 rits:actions(Expression0, Answer0, Hist) -->
-        { Expression0 = (A/B + C/D) },
+        { Expression0 = (_/_ + _/_) },
         { to_rational(Expression0, Expression),
           to_rational(Answer0, Answer) },
         (   { Expression =:= Answer } ->
