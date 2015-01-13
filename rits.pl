@@ -1,10 +1,10 @@
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   RRRR    II  TTTTTTTT  SSSS
-   R  R    II     TT    SS             Rule-based Intelligent
+   RRRRR   II  TTTTTTTT  SSSS
+   R  RR   II     TT    SS             Rule-based Intelligent
    RRRR    II     TT     SSSSS         Tutoring System.
    R   R   II     TT         SS
-   R   RR  II     TT   SSSSSSS
+   R    R  II     TT   SSSSSSS
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :- module(rits, [
