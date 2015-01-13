@@ -86,8 +86,6 @@ list_internals(Ls, Is) :-
         include(internal, Ls, Is0),
         maplist(arg(1), Is0, Is).
 
-% Help for cancellation
-
 
 % Fallback
 
