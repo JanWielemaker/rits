@@ -79,11 +79,6 @@ list_internals(Ls, Is) :-
 
 % Help for cancellation
 
-help_for_wrong_answer(cancel(A/B), _, Hist) -->
-        { list_internals(Hist, [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_]) },
-        [format("I see you are having a hard time with this.\n"),
-         format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])].
-
 
 % Fallback
 
