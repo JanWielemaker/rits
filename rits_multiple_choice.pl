@@ -1,8 +1,8 @@
 :- module(rits_multiple_choice, []).
 
 rits:solve(mchoice(Text,Options,_)) -->
-        [module(translation(Text)),
-         module(choices(Options))].
+        [translation(Text),
+         choices(Options)].
 
 rits:actions(mchoice(Text,Options,Solution), Answer, _) -->
         (   { sort(Answer, Ls), sort(Solution, Ls) } ->
