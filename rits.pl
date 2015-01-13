@@ -71,15 +71,6 @@ rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
 nexts_action_nexts([], done, []).
 nexts_action_nexts([Action|Nexts], Action, Nexts).
 
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   The main logic for helping with wrong answers.
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-% help_for_wrong_answer(_, _, Hist0, _) :-
-%         format("HISTORY so far: ~w\n", [Hist0]),
-%         false.
-
-
 internal(internal(_)).
 
 list_internals(Ls, Is) :-
