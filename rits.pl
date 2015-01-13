@@ -13,6 +13,14 @@
                  rits_history/2      % +S, -History
                 ]).
 
+:- multifile
+        rits:solve//1,
+        rits:help_for_wrong_answer//3,
+        rits:actions//3.
+
+:- use_module(rits_fractions).
+:- use_module(rits_common_multiple).
+
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
    The interface to RITS.
@@ -98,7 +106,7 @@ next_actions(student_answers(A), Hist0, Hist) -->
         { Hist0 = [internal(Expr)|Rest],
           Hist = [internal(Expr=A)|Rest],
           list_internals(Hist, Is) },
-        nexts(Expr, A, Is),
+        actions(Expr, A, Is),
         !. % commit to first solution
 next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         (   { Hist = [_,solve(Expression)|_] } ->
