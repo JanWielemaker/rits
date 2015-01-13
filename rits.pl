@@ -95,10 +95,6 @@ help_for_wrong_answer(_, _, _) -->
 
 subproblem(Ls) --> [enter], Ls, [exit].
 
-to_rational(A, A)          :- integer(A), !.
-to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
-to_rational(A/B, A rdiv B) :- !.
-
 next_actions(next, Hist, Hist) --> [].
 next_actions(done, Hist, Hist) --> [].
 next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
