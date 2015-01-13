@@ -13,6 +13,10 @@
                  rits_history/2      % +S, -History
                 ]).
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   RITS learns about domains via rits:solve//1 and rits:actions//3.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 :- multifile
         rits:solve//1,
         rits:actions//3.
