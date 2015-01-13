@@ -88,3 +88,9 @@ help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
 help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
         [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D])].
+
+% Fallback
+
+help_for_wrong_answer(_, _, _) -->
+        [format("Unfortunately, I cannot give any useful hints here.\n")].
+
