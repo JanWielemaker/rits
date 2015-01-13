@@ -67,11 +67,17 @@ interpret_action(solve(Expr), solve(Expr)).
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 interpret_action(translation(T), next) :- format("~w", [T]). % TODO: provide translations etc.
+interpret_action(choices(Cs), next) :-
+        foldl(format_choice, Cs, 1, _).
+
+format_choice(C, N0, N) :-
+        format("  ~w: ~w\n", [N0,C]),
+        N is N0 + 1.
 
 multiple_choice_sample :-
-        solve_with_student(mchoice("What is the capitol of Mozambique?",
+        solve_with_student(mchoice("What is the capitol of Mozambique?\n",
                                    ['Maputo', 'Pretoria', 'Nairobi', 'Vienna'],
-                                   [1])).
+                                   1)).
 
 
 %?- multiple_choice_sample.
