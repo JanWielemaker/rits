@@ -1,6 +1,11 @@
 
 :- module(rits_fractions, []).
 
+
+to_rational(A, A)          :- integer(A), !.
+to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
+to_rational(A/B, A rdiv B) :- !.
+
 rits:solve(A/B + C/D) -->
         [format("Please solve:\n\n~t~10+"),
          fraction_layout(A/B + C/D)].
