@@ -1,4 +1,7 @@
-% Help for fractions
+
+solve(A/B + C/D) -->
+        [format("Please solve:\n\n~t~10+"),
+         fraction_layout(Expression)].
 
 help_for_wrong_answer(_/B + _/D, _/Y, _) -->
         { least_common_multiple(B, D, Y) },
