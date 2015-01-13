@@ -25,6 +25,7 @@ read_answer(T) :-
             read_answer(T)
         ;   integer(R) -> T = R
         ;   R = A / B -> T = A / B
+        ;   atom(R) -> T = R
         ;   format("    please enter a concrete solution\n"),
             read_answer(T)
         ).
