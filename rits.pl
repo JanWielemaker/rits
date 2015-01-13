@@ -78,11 +78,6 @@ list_internals(Ls, Is) :-
         maplist(arg(1), Is0, Is).
 
 
-% Fallback
-
-help_for_wrong_answer(_, _, _) -->
-        [format("Unfortunately, I cannot give any useful hints here.\n")].
-
 subproblem(Ls) --> [enter], Ls, [exit].
 
 next_actions(next, Hist, Hist) --> [].
