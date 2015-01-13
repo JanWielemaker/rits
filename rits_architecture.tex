@@ -84,6 +84,35 @@ regression testing and further analysis. (\textit{more to follow})
 The RITS engine may be accessed directly via Prolog, remotely via
 JavaScript and \textit{pengines}, or via any other language embedding.
 
+\vspace{1cm}
+\begin{center}
+  \large\textbf{Extending RITS}
+\end{center}
+
+\bigskip
+\noindent Internally, RITS uses the following predicates to decide
+what to do. All of them are DCG rules that describe a list of RITS
+actions that need to be performed in response to certain user actions.
+
+\begin{itemize}
+\item \textbf{solve//1}: this is called with argument \textbf{Expr}
+  for user actions of the form \textbf{solve(Expr)}.
+
+\item \textbf{actions//3}: This is called with arguments \textbf{Expr}
+  and \textbf{Answer} after the user answered the question posed after
+  \textbf{solve(Expr)} with \textbf{Answer}. The third argument is a
+  Prolog representation of previous interactions of the form
+  \textbf{Expr=Answer}.
+
+\end{itemize}
+
+RITS can be extended in a \textit{modular} way to handle new domains.
+To teach RITS additional rules, define a Prolog module that provides
+its own (additional) DCG rules for \textbf{rits:solve//1} and
+\textbf{rits:actions//3}. See \textbf{rits\_multiple\_choice} for the
+definition of simple multiple choice tests that are repeated when
+wrong answers are given.
+
 \vfil
 \end{document}
 
