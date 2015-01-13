@@ -16,10 +16,9 @@ help_for_wrong_answer(_/B + _/D, _/Y, _) -->
           Y mod D =:= 0 },
         [format("The denominator is suitable, but the numerator is wrong!\n"),
          format("Use a smaller common multiple as denominator to make this easier.\n")].
-help_for_wrong_answer(A/B + C/D, X / _, Hist0) -->
+help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
         { B =\= D,
-          X =:= A + C,
-          list_internals(Hist0, Hist) },
+          X =:= A + C },
         [format("You cannot just sum the numerators when the denominators are different!\n\n")],
         (   { member(cm(B,D)=Answer, Hist), least_common_multiple(B,D,Answer) } ->
             [format("Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
