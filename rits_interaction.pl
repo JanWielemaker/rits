@@ -2,7 +2,7 @@
                              solve_with_student/1
                             ]).
 
-:- use_module(rits_engine).
+:- use_module(rits).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Tasks for students. (task number, expression)
