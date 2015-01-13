@@ -1,6 +1,7 @@
 
 :- module(rits_fractions, []).
 
+:- use_module(rits_common_multiple).
 
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
@@ -36,7 +37,7 @@ rits:help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
         ;   { member(cm(B,D)=Answer, Hist), Answer mod B =:= 0, Answer mod D =:= 0 } ->
             [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
              format("You can either use that, or find a smaller multiple to make it easier.\n")]
-        ;   subproblem([format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
+        ;   rits:subproblem([format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
                         solve(cm(B,D)),
                         format("Now apply this knowledge to the original task!\n")])
         ).
@@ -60,14 +61,14 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
                 ;   [format(", but not minimal.\n"), solve(cancel(X/Y))]
                 )
             ;   [format("This is wrong!\n")],
-                help_for_wrong_answer(cancel(A/B), Answer0, Hist),
+                rits:help_for_wrong_answer(cancel(A/B), Answer0, Hist),
                 [solve(cancel(A/B))]
             )
         ;   { integer(Answer0) } ->
             (   { A mod B =:= 0, Answer0 =:= A//B } ->
                 [format("Good, the solution is correct and also minimal. Very nice!\n\n")]
             ;   [format("This is wrong!\n")],
-                help_for_wrong_answer(cancel(A/B), Answer0, Hist),
+                rits:help_for_wrong_answer(cancel(A/B), Answer0, Hist),
                 [solve(cancel(A/B))]
             )
         ;   [solve(cancel(A/B))]
@@ -84,6 +85,6 @@ rits:actions(Expression0, Answer0, Hist) -->
             ;   [format(", but not minimal.\n"), solve(cancel(Answer0))]
             )
         ;   [format("This is wrong.\n")],
-            help_for_wrong_answer(Expression0, Answer0, Hist),
+            rits:help_for_wrong_answer(Expression0, Answer0, Hist),
             [solve(Expression0)]
         ).
