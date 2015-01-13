@@ -1,5 +1,6 @@
 :- module(rits_interaction, [
-                             solve_with_student/1
+                             solve_with_student/1,
+                             multiple_choice_sample/0
                             ]).
 
 :- use_module(rits).
@@ -61,6 +62,19 @@ interpret_action(fraction_layout(F), next) :- fraction_layout(F).
 interpret_action(read_answer, student_answers(T)) :- nl, read_answer(T).
 interpret_action(solve(Expr), solve(Expr)).
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Custom actions for multiple choice sample.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+interpret_action(translation(T), next) :- format("~w", [T]). % TODO: provide translations etc.
+
+multiple_choice_sample :-
+        solve_with_student(mchoice("What is the capitol of Mozambique?",
+                                   ['Maputo', 'Pretoria', 'Nairobi', 'Vienna'],
+                                   [1])).
+
+
+%?- multiple_choice_sample.
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
