@@ -10,7 +10,7 @@ rits:solve(cancel(X/Y)) -->
 
 
 rits:help_for_wrong_answer(cancel(A/B), _, Hist) -->
-        { list_internals(Hist, [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_]) },
+        { Hist = [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_] },
         [format("I see you are having a hard time with this.\n"),
          format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])].
 rits:help_for_wrong_answer(_/B + _/D, _/Y, _) -->
