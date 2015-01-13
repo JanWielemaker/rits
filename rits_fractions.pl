@@ -63,3 +63,18 @@ rits:nexts(cancel(A/B), Answer0, Hist) -->
             )
         ;   [solve(cancel(A/B))]
         ).
+nexts(Expression0, Answer0, Hist) -->
+        { Expression0 = (A/B + C/D) },
+        { to_rational(Expression0, Expression),
+          to_rational(Answer0, Answer) },
+        (   { Expression =:= Answer } ->
+            [format("Good, the solution is correct")],
+            { Shorter is Answer },
+            (   { Shorter = Answer } ->
+                [format(" and also minimal. Very nice!\n\n")]
+            ;   [format(", but not minimal.\n"), solve(cancel(Answer0))]
+            )
+        ;   [format("This is wrong.\n")],
+            help_for_wrong_answer(Expression0, Answer0, Hist),
+            [solve(Expression0)]
+        ).
