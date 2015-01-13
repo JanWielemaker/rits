@@ -15,7 +15,6 @@
 
 :- multifile
         rits:solve//1,
-        rits:help_for_wrong_answer//3,
         rits:actions//3.
 
 :- use_module(rits_fractions).
