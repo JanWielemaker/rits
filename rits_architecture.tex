@@ -124,7 +124,7 @@ given.
 \end{center}
 
 \medskip
-
+\noindent
 Preparing teaching material and exercises for students is one of the
 most elementary and essential tasks that teachers need to perform
 every day. It requires judicious human creativity and knowledge and
@@ -148,8 +148,17 @@ need to be performed in order for students to ``solve'' a task. For
 example, it is easy to declaratively describe your ``Lesson 1'', which
 may consist of showing a video that contains some facts, and then have
 students automatically go through a custom multiple-choice test that
-asks them questions about the video.
+asks them questions about the video in order to assess their
+understanding:
 
+\begin{verbatim}
+ rits:solve(lesson_1) -->
+         [video("http://www.youtube.com/VideoAboutMozambique"),
+          solve(mchoice("What is the capitol of Mozambique?\n",
+                        ['Maputo','Pretoria',
+                         'Nairobi','Vienna'], 1)),
+          done].
+\end{verbatim}
 
 \vfil
 \end{document}
