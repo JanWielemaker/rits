@@ -9,7 +9,7 @@
 
    Usage:
 
-       $ swipl -q -f prepare_translation.pl < rits_engine.pl
+       $ swipl -q -f prepare_translation.pl < <rits_module>.pl
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 run :-
