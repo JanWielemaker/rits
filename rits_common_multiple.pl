@@ -7,11 +7,11 @@ rits:solve(cm(X,Y)) -->
 rits:actions(cm(X,Y), Answer, _) -->
         { \+ integer(Answer) },
         [format("A common multiple must be an integer!\n"), solve(cm(X,Y))].
-rits:actions(cm(X,Y), Answer, Hist) -->
+rits:actions(cm(X,Y), Answer, _) -->
         { Answer = 0, ( X =\= 0 ; Y =\= 0) },
         [format("This is wrong. The solution must be greater than 0.\n"),
          solve(cm(X,Y))].
-rits:actions(cm(X,Y), Answer, Hist) -->
+rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
           Answer mod Y =:= 0 },
         [format("Good, the solution is correct")],
