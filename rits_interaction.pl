@@ -14,10 +14,6 @@ example(2, 1/4 + 2/4).
 example(3, 1/3 + 1/2).
 example(4, 1/5 + 2/3).
 
-
-fraction_layout(A + B) :- fraction_layout(A), format(" + "), fraction_layout(B).
-fraction_layout(A/B)   :- format("~w/~w", [A,B]).
-
 read_answer(T) :-
         read(R),
         (   var(R) ->
@@ -52,6 +48,8 @@ interact_until_done(Action0, S0) :-
    Interpret RITS actions.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+:- discontiguous interpret_action/2.
+
 % interpret_action(A, _) :-
 %         \+ functor(A, format, _),
 %         format("\n\nINTERPRETING: ~w\n\n", [A]), false.
@@ -63,10 +61,27 @@ interpret_action(read_answer, student_answers(T)) :- nl, read_answer(T).
 interpret_action(solve(Expr), solve(Expr)).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Custom action for multimedia.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+interpret_action(video(V), next) :- format("Please watch: ~w\n", [V]).
+
+rits:solve(lesson_1) -->
+        [video("http://www.youtube.com/VideoAboutMozambique"),
+         solve(mchoice("What is the capitol of Mozambique?\n",
+                       ['Maputo','Pretoria','Nairobi','Vienna'], 1)),
+         done].
+
+%?- solve_with_student(lesson_1).
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Custom actions for fraction domain.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 interpret_action(fraction_layout(F), next) :- fraction_layout(F).
+
+fraction_layout(A + B) :- fraction_layout(A), format(" + "), fraction_layout(B).
+fraction_layout(A/B)   :- format("~w/~w", [A,B]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Custom actions for multiple choice sample.
@@ -97,5 +112,7 @@ multiple_choice_sample :-
 ?- solve_with_student(cm(2,4)).
 
 ?- solve_with_student(1/2+3/4).
+
+?- solve_with_student(1/2-3/4).
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
