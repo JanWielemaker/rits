@@ -44,7 +44,7 @@ users to give answers etc.
   \centering
   \begin{tabular}{cp{7cm}}
     \hline
-    \textbf{solve(Expr)} & Tell RITS that the task for the student is to simplify  the expression \textbf{Expr}.\\
+    \textbf{solve(Task)} & Guide the student through solving \textbf{Task}.\\
     \textbf{student\_answers(T)} & Tell RITS that the student has responded with \textbf{T}. This action is only admissible if the directly preceding RITS action was \textbf{read\_answer}.\\
     \textbf{next} & Query RITS for its next action. \\
     \textbf{skip} & The student wants to skip solving the subproblem that is
@@ -64,7 +64,7 @@ users to give answers etc.
     \textbf{format(F)} & The string \textbf{F} is to be displayed.\\
     \textbf{format(F,As)} & The format string \textbf{F} is to be displayed. \textbf{As} is a list of arguments that are output, in sequence, in place of each \texttt{\~\ $\!\!\!$w} that appears in \textbf{F}.\\
     \textbf{read\_answer} & The student is to be queried for a an answer.\\
-    \textbf{solve(Expr)} & The student should be given the task to simplify \textbf{Expr}.\\
+    \textbf{solve(Task)} & The student should be given the task \textbf{Task}.\\
     \textbf{done} & There are no further actions.\\
     \hline
   \end{tabular}
@@ -94,14 +94,14 @@ what to do. All of them are DCG rules that describe a list of RITS
 actions that need to be performed in response to certain user actions.
 
 \begin{itemize}
-\item \textbf{rits:solve//1}: this is called with argument \textbf{Expr}
-  for user actions of the form \textbf{solve(Expr)}.
+\item \textbf{rits:solve//1}: this is called with argument \textbf{Task}
+  for user actions of the form \textbf{solve(Task)}.
 
-\item \textbf{rits:actions//3}: This is called with arguments \textbf{Expr}
+\item \textbf{rits:actions//3}: This is called with arguments \textbf{Task}
   and \textbf{Answer} after the user answered the question posed after
-  \textbf{solve(Expr)} with \textbf{Answer}. The third argument is a
+  \textbf{solve(Task)} with \textbf{Answer}. The third argument is a
   Prolog representation of previous interactions of the form
-  \textbf{Expr=Answer}.
+  \textbf{T=A}.
 
 \end{itemize}
 
