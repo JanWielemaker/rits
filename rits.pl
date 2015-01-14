@@ -82,7 +82,7 @@ list_internals(Ls, Is) :-
 
 
 next_actions(next, Hist, Hist) --> [].
-next_actions(done, Hist, Hist) --> [].
+next_actions(done, Hist, Hist) --> [done].
 next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
 next_actions(student_answers(A), Hist0, Hist) -->
         { Hist0 = [internal(Expr)|Rest],
