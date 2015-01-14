@@ -15,8 +15,7 @@ rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
           Answer mod Y =:= 0 },
         [format("Good, the solution is correct")],
-        { least_common_multiple(X, Y, LCM) },
-        (   { Answer =:= LCM } ->
+        (   { least_common_multiple(X, Y, Answer) } ->
             [format(" and also minimal. Very nice!\n\n")]
         ;   [format(". There is also a smaller solution!\n")]
         ).
