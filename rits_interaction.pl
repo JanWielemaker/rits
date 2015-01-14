@@ -59,9 +59,14 @@ interpret_action(enter, next).
 interpret_action(exit, next).
 interpret_action(format(F,As), next)       :- format(F, As).
 interpret_action(format(F), next)          :- format(F).
-interpret_action(fraction_layout(F), next) :- fraction_layout(F).
 interpret_action(read_answer, student_answers(T)) :- nl, read_answer(T).
 interpret_action(solve(Expr), solve(Expr)).
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Custom actions for fraction domain.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+interpret_action(fraction_layout(F), next) :- fraction_layout(F).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Custom actions for multiple choice sample.
