@@ -53,7 +53,7 @@ rits_history(s(_,Hist0), Hist) :- reverse(Hist0, Hist).
 
 rits_next_action(Action0, Action, S0, S) :-
         rits_next_action_(Action0, Action1, S0, S1),
-        (   internal(Action1) ->
+        (   (   internal(Action1) ;  Action1 = subproblem(_) ) ->
             rits_next_action(Action1, Action, S1, S)
         ;   Action = Action1,
             S = S1
@@ -81,8 +81,6 @@ list_internals(Ls, Is) :-
         maplist(arg(1), Is0, Is).
 
 
-subproblem(Ls) --> [enter], Ls, [exit].
-
 next_actions(next, Hist, Hist) --> [].
 next_actions(done, Hist, Hist) --> [].
 next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
@@ -92,6 +90,7 @@ next_actions(student_answers(A), Hist0, Hist) -->
           list_internals(Hist, Is) },
         actions(Expr, A, Is),
         !. % commit to first solution
+next_actions(subproblem(Ls), Hist, Hist) --> [enter], Ls, [exit].
 next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         (   { Hist = [_,solve(Expression)|_] } ->
             [format("So, let's try again!\n")]
