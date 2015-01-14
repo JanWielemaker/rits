@@ -34,7 +34,8 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
                 [solve(cancel(A/B))]
             )
-        ;   [solve(cancel(A/B))]
+        ;   [format("The answer must be an integer or a fraction.\n"),
+             solve(cancel(A/B))]
         ).
 rits:actions(Expression0, Answer0, Hist) -->
         { to_rational(Expression0, Expression),
