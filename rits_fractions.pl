@@ -40,7 +40,7 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
 rits:actions(Expression0, Answer0, Hist) -->
         { to_rational(Expression0, Expression),
           to_rational(Answer0, Answer) },
-        (   { Expression =:= Answer } ->
+        (   { catch(Expression =:= Answer,_,false) } ->
             [format("Good, the solution is correct")],
             { Shorter is Answer },
             (   { Shorter = Answer } ->
