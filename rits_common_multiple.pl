@@ -38,3 +38,11 @@ help_for_wrong_answer(cm(X,Y), A, _) -->
         { A mod Y =\= 0 },
         [format("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y])].
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Test cases.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+rits:test([solve(cm(1,2)),_,=>(3),"not divisible",_]).
+rits:test([solve(cm(1,2)),_,=>(3),"not divisible",_,solve(cm(1,2)),"again",_,=>(2),"nice"]).
+rits:test([solve(cm(1,2)),_,=>(2),"minimal"]).
+rits:test([solve(cm(1,2)),"multiple",=>(4),"smaller"]).
