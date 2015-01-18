@@ -95,3 +95,11 @@ help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
 help_for_wrong_answer(_, _, _) -->
         [format("Unfortunately, I cannot give any useful hints here.\n")].
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Test cases.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+
+rits:test([solve(1/2 + 3/4),_,_,=>(5/4),"nice"]).
+
+%?- rits_run_test([solve(1/2 + 3/4),_,_,=>(4/6),*,"Please enter",_,=>(4),*]).

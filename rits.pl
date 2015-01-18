@@ -10,7 +10,8 @@
 :- module(rits, [
                  rits_start/1,       % -S0
                  rits_next_action/4, % +Action0, -Action, +S0, -S
-                 rits_history/2      % +S, -History
+                 rits_history/2,     % +S, -History
+                 rits_run_test/1     % +Test
                 ]).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -125,26 +126,40 @@ rits_run_test([T|Ts]) :-
         rits_next_action(T, A, S0, S),
         action_test(A, Ts, S).
 
+action_test(A0, _, _) :-
+        format("RITS says: ~q\n", [A0]),
+        false.
 action_test(done, [], _) :- !.
 action_test(A0, [], _)   :- dif(A0, done), throw(not_done-A0).
 action_test(A0, [T|Ts0], S0) :-
-        (   test_action_rest(T, A0, A, Ts0, Ts) -> true
-        ;   throw(test_mismatch(T,A0))
-        ),
-        rits_next_action(A, Next, S0, S),
-        action_test(Next, Ts, S).
+        (   T == (*), Ts0 = [] -> true
+        ;   (   test_action_rest(T, A0, A, Ts0, Ts) -> true
+            ;   throw(test_mismatch(T,A0))
+            ),
+            format("I say: ~q\n", [A]),
+            rits_next_action(A, Next, S0, S),
+            action_test(Next, Ts, S)
+        ).
 
 test_action_rest(Var, A0, next, Ts, Ts) :-
         var(Var),
         A0 = Var.
+% test_action_rest(T, A0, _, _, _) :-
+%         format("processing: ~q, got: ~q\n", [T,A0]),
+%         false.
+test_action_rest(*, A0, A, [T|Ts0], Ts) :-
+        (   skip_actions_to(T, A0) ->
+            test_action_rest(T, A0, A, Ts0, Ts)
+        ;   A = next,
+%            format("skipping: ~q, waiting for: ~w\n", [A0,T]),
+            Ts = [*,T|Ts0]
+        ).
 test_action_rest(Sub, A0, next, Ts0, Ts) :-
         string(Sub),
-        (   A0 = format(F) -> true
-        ;   A0 = format(F, _) -> true
+        (   action_string(A0, String) -> true
         ;   throw(format_expected-A0)
         ),
-        (   string_concat(_, Post, F),
-            string_concat(Sub, _, Post) ->
+        (   string_substring(String, Sub) ->
             Ts = Ts0
         ;   Ts = [Sub|Ts0] % keep looking
         ).
@@ -152,8 +167,23 @@ test_action_rest(=>(Answer), A0, student_answers(Answer), Ts, Ts) :-
         (   A0 = read_answer -> true
         ;   throw(read_answer_expected)
         ).
-test_action_rest(solve(Task), _, solve(Task), Ts, Ts).
+test_action_rest(solve(Task), solve(Task), solve(Task), Ts, Ts).
 test_action_rest(A0, A0, next, Ts, Ts).
+
+
+skip_actions_to(=>(_), read_answer).
+skip_actions_to(Sub, A0) :-
+        string(Sub),
+        action_string(A0, String),
+        string_substring(String, Sub).
+skip_actions_to(A, A).
+
+action_string(format(F), F).
+action_string(format(F,_), F).
+
+string_substring(String, Sub) :-
+        string_concat(_, Post, String),
+        string_concat(Sub, _, Post).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    High-level debugging interface to RITS.
@@ -182,18 +212,19 @@ observe_(_, A, S0, S) :-
         observe_(A1, A, S1, S).
 
 
-:- initialization(rits_run_tests).
+%:- initialization(rits_run_tests).
 
 /** <examples>
 
 ?- rits_start(S0), rits_next_action(solve(1/2+3/4), A, S0, S).
 
 ?- rits:observe(solve(cm(1,2)), A, S).
-?- rits:rits_run_test([solve(cm(1,2)),_,=>(3),"not divisible",_]).
+?- rits_run_test([solve(cm(1,2)),*,=>(3),"not divisible",*]).
 
-?- rits:rits_run_test([solve(cm(1,2)),_,=>(3),"not divisible",_,solve(cm(1,2)),"again",_,=>(2),"correct","nice"]).
+?- rits_run_test([solve(cm(1,2)),_,=>(3),"not divisible",solve(cm(1,2)),"again",*,=>(2),"correct","nice"]).
 
-?- rits:rits_run_test([solve(cm(1,2)),_,=>(3),"wrong",_,S,solve(cm(1,2)),"common multiple",=>(2),"minimal"]).
-?- rits:rits_run_test([solve(cm(1,2)),_,=>(2),_,"minimal"]).
-?- rits:rits_run_test([solve(cm(1,2)),"multiple",=>(4),"correct","smaller"]).
+?- rits_run_test([solve(cm(1,2)),_,=>(3),*,solve(cm(1,2)),"common multiple",=>(2),"minimal"]).
+?- rits_run_test([solve(cm(1,2)),_,=>(3),*,solve(X),*]).
+?- rits_run_test([solve(cm(1,2)),_,=>(2),_,"minimal"]).
+?- rits_run_test([solve(cm(1,2)),"multiple",=>(4),"correct","smaller"]).
 */

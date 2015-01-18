@@ -115,4 +115,8 @@ multiple_choice_sample :-
 
 ?- solve_with_student(1/2-3/4).
 
+%?- rits:rits_run_test([solve(1/2 + 3/4),_,_,=>(4/6),_,"Please enter",_,=>(4)]).
+
+%?- rits:rits_run_test([solve(1/2 + 3/4),_,_,=>(4/6),_,_,enter,"common multiple",_,solve(cm(2,4))]).
+ERROR: Unhandled exception: not_done-format("Please enter a common multiple of ~w and ~w:\n\n",[2,4])
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
