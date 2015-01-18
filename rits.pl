@@ -130,7 +130,7 @@ rits_run_test([T|Ts]) :-
         action_test(A, Ts, S).
 
 action_test(A0, _, _) :-
-        format("RITS says: ~q\n", [A0]),
+        format("RITS says:~t~15| ~q\n", [A0]),
         false.
 action_test(done, Ts, _) :- !,
         (   Ts == [] -> true
@@ -143,7 +143,7 @@ action_test(A0, [T|Ts0], S0) :-
         ;   (   test_action_rest(T, A0, A, Ts0, Ts) -> true
             ;   throw(test_mismatch(T,A0))
             ),
-            format("Client says: ~q\n", [A]),
+            format("Client says:~t~15| ~q\n", [A]),
             rits_next_action(A, Next, S0, S),
             action_test(Next, Ts, S)
         ).
