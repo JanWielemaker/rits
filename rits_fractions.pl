@@ -102,7 +102,5 @@ help_for_wrong_answer(_, _, _) -->
    Test cases.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-
-rits:test([solve(1/2 + 3/4),_,_,=>(5/4),"nice"]).
-
-%?- rits_run_test([solve(1/2 + 3/4),_,_,=>(4/6),*,"Please enter",_,=>(4),*]).
+rits:test([solve(1/2 + 3/4),*,=>(5/4),"nice"]).
+rits:test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(5/4),"nice"]).
