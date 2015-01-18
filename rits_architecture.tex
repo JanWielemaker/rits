@@ -8,7 +8,11 @@
 
 \vspace{1cm}
 \noindent
-To use RITS, add the following line to your Prolog code:
+The Rule-based Intelligent Tutoring System (RITS) contains and
+controls all logic for interacting with users. Each client (which we
+use as a synonym for ``user'' throughout) sends user actions to RITS,
+and then queries RITS for the next action to be performed. To use
+RITS, add the following line to your Prolog code:
 
 \bigskip
 \textbf{:- use\_module(rits).}
@@ -19,23 +23,23 @@ To use RITS, add the following line to your Prolog code:
 \begin{itemize}
 \item \textbf{rits\_start(-Start)}\\\textbf{Start} is unified with a
   Prolog term that represents the initial state of RITS, before the
-  system has received any user actions.
+  system has received any client (i.e., user) actions.
 
 \item \textbf{rits\_next\_action(+A0, -A, +S0, -S)}\\
-  This predicate relates a user action \textbf{A0} and a RITS state
+  This predicate relates a client action \textbf{A0} and a RITS state
   \textbf{S0} to the next RITS action \textbf{A} and next
   state~\textbf{S}.
 
 \item \textbf{rits\_history(+S, -Hist)}\\
   \textbf{Hist} is unified with a list of Prolog terms that represent
-  the history of user interactions up to and including state~\textbf{S}.
+  the history of client interactions up to and including state~\textbf{S}.
 \end{itemize}
 
 These predicates are completely \textit{pure}: They do not emit any
 output, do not write any files, and do not query the user in any way.
 Therefore, they can be quite safely executed in a hosting environment.
 
-User actions are described in Table~\ref{tab:useractions}. The most
+Client actions are described in Table~\ref{tab:useractions}. The most
 important RITS actions are described in Table~\ref{tab:ritsactions}.
 RITS clients are expected to interpret RITS actions ``appropriately'',
 such as: displaying messages on the terminal or via HTML, allowing
@@ -43,7 +47,7 @@ users to give answers etc.
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{cp{7cm}}
+  \begin{tabular}{cp{8cm}}
     \hline
     \textbf{solve(Task)} & Guide the student through solving \textbf{Task}.\\
     \textbf{student\_answers(T)} & Tell RITS that the student has responded with the Prolog term~\textbf{T}. This action is only admissible if the directly preceding RITS action was \textbf{read\_answer}.\\
@@ -52,13 +56,13 @@ users to give answers etc.
     currently in progress. (\textit{TODO})\\
     \hline
   \end{tabular}
-\caption{Admissible user actions}
+\caption{Admissible client actions}
   \label{tab:useractions}
 \end{table}
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{cp{7cm}}
+  \begin{tabular}{cp{8cm}}
     \hline
     \textbf{enter} & Start of a subproblem that the student must solve.\\
     \textbf{exit} & The most recently spawned subproblem was solved.\\
@@ -92,17 +96,18 @@ JavaScript and \textit{pengines}, or via any other language embedding.
 \medskip
 \noindent Internally, RITS uses the following predicates to decide
 what to do. All of them are DCG rules that describe a list of RITS
-actions that need to be performed in response to certain user actions.
+actions that need to be performed in response to certain client actions.
 
 \begin{itemize}
 \item \textbf{rits:solve//1}: this is called with argument \textbf{Task}
-  for user actions of the form \textbf{solve(Task)}.
+  for client actions of the form \textbf{solve(Task)}.
 
-\item \textbf{rits:actions//3}: This is called with arguments \textbf{Task}
-  and \textbf{Answer} after the user answered the question posed after
-  \textbf{solve(Task)} with \textbf{Answer}. The third argument is a
-  Prolog representation of previous interactions of the form
-  \textbf{T=A}, in reverse chronological order.
+\item \textbf{rits:actions//3}: This is called with arguments
+  \textbf{Task} and \textbf{Answer} after the user (i.e., client)
+  answered the question posed after \textbf{solve(Task)} with
+  \textbf{Answer}. The third argument is a Prolog representation of
+  previous interactions of the form \textbf{T=A}, in reverse
+  chronological order.
 
 \end{itemize}
 
@@ -119,7 +124,8 @@ See the file \textbf{rits\_multiple\_choice.pl} for the definition of
 simple multiple choice tests that are repeated when wrong answers are
 given.
 
-\bigskip
+\pagebreak
+
 \begin{center}
   \large\textbf{LORITS: The extensible language of RITS}
 \end{center}
@@ -170,6 +176,35 @@ easy to put together custom lessons that students can work through.
   be put together quickly, possibly with our initial assistance. The
   task here is to find good and versatile actions to cover a large
   variety of interaction styles.}
+
+\pagebreak
+
+\begin{center}
+  \large\textbf{UTRITS: Expressing Unit Tests for RITS}
+\end{center}
+
+\medskip
+\noindent
+UTRITS is a domain-specific language that lets you express
+\textit{unit tests} for RITS. A unit test is a sequence of RITS
+actions and client responses, with some possibilities for
+abbreviations. The elements of UTRITS are described in
+Table~\ref{tab:utrits}.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{cp{7cm}}
+    \hline
+    \textit{String} & True when RITS ``emits'' (via RITS action \textbf{format}) a string that contains \textit{String}. \\
+    \textbf{solve(Task)} & Start solving \textbf{Task}. This can be initiated either by RITS itself (for example, when spawning a subproblem), or by the client.\\
+    \textbf{$=>$(T)} & Respond to the preceding RITS action, which must have been \textbf{read\_answer}, with the client action~\textbf{student\_answers(T)}. \\
+    \hline
+  \end{tabular}
+\caption{Admissible elements of UTRITS}
+  \label{tab:utrits}
+\end{table}
+
+
 
 \vfil
 \end{document}
