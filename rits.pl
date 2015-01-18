@@ -105,6 +105,16 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         !, % commit to first solution
         [internal(Expression),read_answer].
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   TERITS: Testing environment for RITS.
+
+   The testing language consists of elements like:
+
+       *(Substring):   True if RITS emits a string containing Substring
+       =>(Answer):     Simulate student responding with Answer
+       Variable:       True for any RITS response.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 run_tests :-
         findall(T, test(T), Ts),
         maplist(run_test, Ts).
@@ -139,6 +149,7 @@ test_action_rest(=>(Answer), A0, student_answers(Answer), Ts, Ts) :-
         (   A0 = read_answer -> true
         ;   throw(read_answer_expected)
         ).
+test_action_rest(solve(Task), _, solve(Task), Ts, Ts).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    High-level debugging interface to RITS.
@@ -175,6 +186,10 @@ observe_(_, A, S0, S) :-
 
 ?- rits:observe(solve(cm(1,2)), A, S).
 ?- rits:run_test([solve(cm(1,2)),_,=>(3),*("wrong"),_,S]).
+
+?- rits:run_test([solve(cm(1,2)),_,=>(3),*("wrong"),_,S,solve(cm(1,2)),*("again"),_,=>(2),*("correct"),*("nice")]).
+
+?- rits:run_test([solve(cm(1,2)),_,=>(3),*("wrong"),_,S,solve(cm(1,2)),_]).
 ?- rits:run_test([solve(cm(1,2)),_,=>(2),_,*("minimal")]).
 ?- rits:run_test([solve(cm(1,2)),*("multiple"),=>(4),*("correct"),*("smaller")]).
 */
