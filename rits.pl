@@ -19,7 +19,8 @@
 
 :- multifile
         rits:solve//1,
-        rits:actions//3.
+        rits:actions//3,
+        rits:test/1.
 
 :- use_module(rits_fractions).
 :- use_module(rits_common_multiple).
@@ -81,7 +82,11 @@ list_internals(Ls, Is) :-
         maplist(arg(1), Is0, Is).
 
 
-next_actions(next, Hist, Hist) --> [].
+next_actions(next, Hist, Hist) -->
+        (   { Hist = [internal(_)|_] } ->
+            { throw(expecting_student_answers) }
+        ;   []
+        ).
 next_actions(done, Hist, Hist) --> [done].
 next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
 next_actions(student_answers(A), Hist0, Hist) -->
@@ -99,6 +104,41 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         solve(Expression),
         !, % commit to first solution
         [internal(Expression),read_answer].
+
+% run_tests :-
+%         findall(T, test(T), Ts),
+%         maplist(run_test, Ts).
+
+% run_test([First|Rest]) :-
+%         rits_start(S0),
+%         rits_next_action(First, A, S0, S),
+%         test_rest(Rest, A, S).
+
+% test_rest([], A, _) :-
+%         (   A == done -> true
+%         ;   throw(not_yet_done_but_no_actions)
+%         ).
+% test_rest([R|Rs], A0, S) :-
+%         test_action(R, A0, A),
+%         test_rest(Rs, 
+
+% test_action(substring(S), format(F)) :-
+%         string_concat(Pre, Post, F),
+%         string_concat(S, _, Post).
+
+observe(Start, Next) :-
+        rits_start(S0),
+        rits_next_action(Start, A0, S0, S1),
+        observe_(A0, Next, S1).
+
+observe_(A, A, _).
+observe_(_, A, S0) :-
+        rits_next_action(next, A1, S0, S1),
+        observe_(A1, A, S1).
+
+%?- rits:observe(solve(cm(1,2)), A).
+
+% :- initialization(run_tests).
 
 /** <examples>
 
