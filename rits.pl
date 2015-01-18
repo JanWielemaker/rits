@@ -153,6 +153,7 @@ test_action_rest(=>(Answer), A0, student_answers(Answer), Ts, Ts) :-
         ;   throw(read_answer_expected)
         ).
 test_action_rest(solve(Task), _, solve(Task), Ts, Ts).
+test_action_rest(A0, A0, next, Ts, Ts).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    High-level debugging interface to RITS.
