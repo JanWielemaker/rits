@@ -114,10 +114,8 @@ run_test([T|Ts]) :-
         rits_next_action(T, A, S0, S),
         action_test(A, Ts, S).
 
-action_test(A0, [], _) :- !,
-        (   A0 = done -> true
-        ;   throw(not_done-A0)
-        ).
+action_test(done, [], _) :- !.
+action_test(A0, [], _)   :- dif(A0, done), throw(not_done-A0).
 action_test(A0, [T|Ts0], S0) :-
         test_action_rest(T, A0, A, Ts0, Ts),
         rits_next_action(A, Next, S0, S),
