@@ -17,7 +17,10 @@ rits:solve(cancel(X/Y)) -->
 
 rits:actions(cancel(A/B), Answer0, Hist) -->
         (   { Answer0 = X / Y } ->
-            (   { A rdiv B =:= X rdiv Y } ->
+            (   { Y = 0 } ->
+                [format("The denominator of a fraction cannot be 0.\n"),
+                 solve(cancel(A/B))]
+            ;   { A rdiv B =:= X rdiv Y } ->
                 [format("Good, the solution is correct")],
                 (   { gcd(X,Y) =:= 1 } ->
                     [format(" and also minimal. Very nice!\n\n")]

@@ -115,6 +115,8 @@ multiple_choice_sample :-
 
 ?- rits:rits_run_test([solve(1/2+3/4),*,=>(5/0),"wrong",*]).
 
+?- rits:rits_run_test([solve(cancel(10/5)),*,=>(2/0),*]).
+
 ?- solve_with_student(1/2-3/4).
 
 ?- rits:rits_run_test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(5/4),"nice"]).
