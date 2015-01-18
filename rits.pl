@@ -176,7 +176,6 @@ observe_(_, A, S0, S) :-
 ?- rits_start(S0), rits_next_action(solve(1/2+3/4), A, S0, S).
 
 ?- rits:observe(solve(cm(1,2)), A, S).
-?- rits:run_test([solve(cm(1,2)),M,=>(4),N]).
-?- rits:run_test([solve(cm(1,2)),*("multiple"),=>(4)]).
+?- rits:run_test([solve(cm(1,2)),_,=>(2),_,*("minimal")]).
 ?- rits:run_test([solve(cm(1,2)),*("multiple"),=>(4),*("correct"),*("smaller")]).
 */
