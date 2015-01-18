@@ -115,11 +115,12 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
        Variable:      True for any RITS response.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-run_tests :-
+rits_run_tests :-
         findall(T, test(T), Ts),
-        maplist(run_test, Ts).
+        maplist(rits_run_test, Ts).
 
-run_test([T|Ts]) :-
+rits_run_test([T|Ts]) :-
+        % portray_clause(run_test([T|Ts])),
         rits_start(S0),
         rits_next_action(T, A, S0, S),
         action_test(A, Ts, S).
@@ -180,18 +181,18 @@ observe_(_, A, S0, S) :-
         observe_(A1, A, S1, S).
 
 
-% :- initialization(run_tests).
+:- initialization(rits_run_tests).
 
 /** <examples>
 
 ?- rits_start(S0), rits_next_action(solve(1/2+3/4), A, S0, S).
 
 ?- rits:observe(solve(cm(1,2)), A, S).
-?- rits:run_test([solve(cm(1,2)),_,=>(3),"not divisible",_]).
+?- rits:rits_run_test([solve(cm(1,2)),_,=>(3),"not divisible",_]).
 
-?- rits:run_test([solve(cm(1,2)),_,=>(3),"not divisible",_,solve(cm(1,2)),"again",_,=>(2),"correct","nice"]).
+?- rits:rits_run_test([solve(cm(1,2)),_,=>(3),"not divisible",_,solve(cm(1,2)),"again",_,=>(2),"correct","nice"]).
 
-?- rits:run_test([solve(cm(1,2)),_,=>(3),"wrong",_,S,solve(cm(1,2)),"common multiple",=>(2),"minimal"]).
-?- rits:run_test([solve(cm(1,2)),_,=>(2),_,"minimal"]).
-?- rits:run_test([solve(cm(1,2)),"multiple",=>(4),"correct","smaller"]).
+?- rits:rits_run_test([solve(cm(1,2)),_,=>(3),"wrong",_,S,solve(cm(1,2)),"common multiple",=>(2),"minimal"]).
+?- rits:rits_run_test([solve(cm(1,2)),_,=>(2),_,"minimal"]).
+?- rits:rits_run_test([solve(cm(1,2)),"multiple",=>(4),"correct","smaller"]).
 */
