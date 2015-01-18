@@ -110,9 +110,9 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
 
    The testing language consists of elements like:
 
-       *(Substring):   True if RITS emits a string containing Substring
-       =>(Answer):     Simulate student responding with Answer
-       Variable:       True for any RITS response.
+       "Substring":   True if RITS emits a string containing Substring.
+       =>(Answer):    Simulate student responding with Answer.
+       Variable:      True for any RITS response.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 run_tests :-
@@ -127,15 +127,17 @@ run_test([T|Ts]) :-
 action_test(done, [], _) :- !.
 action_test(A0, [], _)   :- dif(A0, done), throw(not_done-A0).
 action_test(A0, [T|Ts0], S0) :-
-        test_action_rest(T, A0, A, Ts0, Ts),
+        (   test_action_rest(T, A0, A, Ts0, Ts) -> true
+        ;   throw(test_mismatch(T,A0))
+        ),
         rits_next_action(A, Next, S0, S),
         action_test(Next, Ts, S).
 
 test_action_rest(Var, A0, next, Ts, Ts) :-
         var(Var),
-        !,
         A0 = Var.
-test_action_rest(*(Sub), A0, next, Ts0, Ts) :-
+test_action_rest(Sub, A0, next, Ts0, Ts) :-
+        string(Sub),
         (   A0 = format(F) -> true
         ;   A0 = format(F, _) -> true
         ;   throw(format_expected-A0)
@@ -143,7 +145,7 @@ test_action_rest(*(Sub), A0, next, Ts0, Ts) :-
         (   string_concat(_, Post, F),
             string_concat(Sub, _, Post) ->
             Ts = Ts0
-        ;   Ts = [*(Sub)|Ts0] % keep looking
+        ;   Ts = [Sub|Ts0] % keep looking
         ).
 test_action_rest(=>(Answer), A0, student_answers(Answer), Ts, Ts) :-
         (   A0 = read_answer -> true
@@ -185,11 +187,11 @@ observe_(_, A, S0, S) :-
 ?- rits_start(S0), rits_next_action(solve(1/2+3/4), A, S0, S).
 
 ?- rits:observe(solve(cm(1,2)), A, S).
-?- rits:run_test([solve(cm(1,2)),_,=>(3),*("wrong"),_,S]).
+?- rits:run_test([solve(cm(1,2)),_,=>(3),"not divisible",_]).
 
-?- rits:run_test([solve(cm(1,2)),_,=>(3),*("wrong"),_,S,solve(cm(1,2)),*("again"),_,=>(2),*("correct"),*("nice")]).
+?- rits:run_test([solve(cm(1,2)),_,=>(3),"not divisible",_,solve(cm(1,2)),"again",_,=>(2),"correct","nice"]).
 
-?- rits:run_test([solve(cm(1,2)),_,=>(3),*("wrong"),_,S,solve(cm(1,2)),_]).
-?- rits:run_test([solve(cm(1,2)),_,=>(2),_,*("minimal")]).
-?- rits:run_test([solve(cm(1,2)),*("multiple"),=>(4),*("correct"),*("smaller")]).
+?- rits:run_test([solve(cm(1,2)),_,=>(3),"wrong",_,S,solve(cm(1,2)),"common multiple",=>(2),"minimal"]).
+?- rits:run_test([solve(cm(1,2)),_,=>(2),_,"minimal"]).
+?- rits:run_test([solve(cm(1,2)),"multiple",=>(4),"correct","smaller"]).
 */
