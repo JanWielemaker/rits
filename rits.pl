@@ -126,6 +126,22 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
 %         string_concat(Pre, Post, F),
 %         string_concat(S, _, Post).
 
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   High-level debugging interface to RITS.
+
+   You can observe the actions that RITS responds with and its states.
+
+   Example:
+
+      ?- rits:observe(solve(3/5+3/6), A, S).
+      A = format("Please solve:\n\n~t~10+"),
+      S = ...
+      A = fraction_layout(3/5+3/6),
+      S = ...
+
+   You can copy & paste the state and use it to test rits_next_action/4.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
 observe(Start, Next, S) :-
         rits_start(S0),
         rits_next_action(Start, A0, S0, S1),
