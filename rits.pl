@@ -118,29 +118,29 @@ action_test(A0, [], _) :- !,
         (   A0 = done -> true
         ;   throw(not_done-A0)
         ).
-action_test(A0, [Var|Ts], S0) :-
+action_test(A0, [T|Ts0], S0) :-
+        test_action_rest(T, A0, A, Ts0, Ts),
+        rits_next_action(A, Next, S0, S),
+        action_test(Next, Ts, S).
+
+test_action_rest(Var, A0, next, Ts, Ts) :-
         var(Var),
         !,
-        A0 = Var,
-        rits_next_action(next, A, S0, S),
-        action_test(A, Ts, S).
-action_test(A0, [*(Sub)|Ts], S0) :- !,
+        A0 = Var.
+test_action_rest(*(Sub), A0, next, Ts0, Ts) :-
         (   A0 = format(F) -> true
         ;   A0 = format(F, _) -> true
         ;   throw(format_expected-A0)
         ),
-        rits_next_action(next, A, S0, S),
         (   string_concat(_, Post, F),
             string_concat(Sub, _, Post) ->
-            action_test(A, Ts, S)
-        ;   action_test(A, [*(Sub)|Ts], S) % keep looking
+            Ts = Ts0
+        ;   Ts = [*(Sub)|Ts0] % keep looking
         ).
-action_test(A0, [=>(Answer)|Ts], S0) :- !,
+test_action_rest(=>(Answer), A0, student_answers(Answer), Ts, Ts) :-
         (   A0 = read_answer -> true
         ;   throw(read_answer_expected)
-        ),
-        rits_next_action(student_answers(Answer), A, S0, S),
-        action_test(A, Ts, S).
+        ).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    High-level debugging interface to RITS.
