@@ -126,17 +126,19 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
 %         string_concat(Pre, Post, F),
 %         string_concat(S, _, Post).
 
-observe(Start, Next) :-
+observe(Start, Next, S) :-
         rits_start(S0),
         rits_next_action(Start, A0, S0, S1),
-        observe_(A0, Next, S1).
+        observe_(A0, Next, S1, S).
 
-observe_(A, A, _).
-observe_(_, A, S0) :-
+observe_(A, A, S, S).
+observe_(_, A, S0, S) :-
         rits_next_action(next, A1, S0, S1),
-        observe_(A1, A, S1).
+        observe_(A1, A, S1, S).
 
-%?- rits:observe(solve(cm(1,2)), A).
+%?- rits:observe(solve(cm(1,2)), A, S).
+
+%?- rits_start(S0), rits_next_action(next, A, S0, S).
 
 % :- initialization(run_tests).
 
