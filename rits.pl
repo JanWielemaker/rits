@@ -105,26 +105,38 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         !, % commit to first solution
         [internal(Expression),read_answer].
 
-% run_tests :-
-%         findall(T, test(T), Ts),
-%         maplist(run_test, Ts).
+run_tests :-
+        findall(T, test(T), Ts),
+        maplist(run_test, Ts).
 
-% run_test([First|Rest]) :-
-%         rits_start(S0),
-%         rits_next_action(First, A, S0, S),
-%         test_rest(Rest, A, S).
+run_test([T|Ts]) :-
+        rits_start(S0),
+        rits_next_action(T, A, S0, S),
+        action_test(A, Ts, S).
 
-% test_rest([], A, _) :-
-%         (   A == done -> true
-%         ;   throw(not_yet_done_but_no_actions)
-%         ).
-% test_rest([R|Rs], A0, S) :-
-%         test_action(R, A0, A),
-%         test_rest(Rs, 
-
-% test_action(substring(S), format(F)) :-
-%         string_concat(Pre, Post, F),
-%         string_concat(S, _, Post).
+action_test(A0, [Var|Ts], S0) :-
+        var(Var),
+        !,
+        A0 = Var,
+        rits_next_action(next, A, S0, S),
+        action_test(A, Ts, S).
+action_test(A0, [substring(Sub)|Ts], S0) :- !,
+        (   A0 = format(F) -> true
+        ;   A0 = format(F, _) -> true
+        ;   throw(format_expected-A0)
+        ),
+        rits_next_action(next, A, S0, S),
+        (   string_concat(_, Post, F),
+            string_concat(Sub, _, Post) ->
+            action_test(A, Ts, S)
+        ;   action_test(A, [substring(Sub)|Ts], S) % keep looking
+        ).
+action_test(A0, [=>(Answer)|Ts], S0) :-
+        (   A0 = read_answer -> true
+        ;   throw(read_answer_expected)
+        ),
+        rits_next_action(student_answers(Answer), A, S0, S),
+        action_test(A, Ts, S).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    High-level debugging interface to RITS.
