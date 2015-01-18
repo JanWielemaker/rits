@@ -42,7 +42,7 @@ help_for_wrong_answer(cm(X,Y), A, _) -->
    Test cases.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-rits:test([solve(cm(1,2)),_,=>(3),"not divisible",_]).
-rits:test([solve(cm(1,2)),_,=>(3),"not divisible",_,solve(cm(1,2)),"again",_,=>(2),"nice"]).
-rits:test([solve(cm(1,2)),_,=>(2),"minimal"]).
+rits:test([solve(cm(1,2)),*,=>(3),"not divisible",*]).
+rits:test([solve(cm(1,2)),*,=>(3),"not divisible",*,solve(cm(1,2)),"again",*,=>(2),"nice"]).
+rits:test([solve(cm(1,2)),*,=>(2),"minimal"]).
 rits:test([solve(cm(1,2)),"multiple",=>(4),"smaller"]).
