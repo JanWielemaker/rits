@@ -193,11 +193,17 @@ Table~\ref{tab:utrits}.
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{cp{7cm}}
+  \begin{tabular}{cp{8.5cm}}
     \hline
     \textit{String} & True when RITS ``emits'' (via RITS action \textbf{format}) a string that contains \textit{String}. \\
     \textbf{solve(Task)} & Start solving \textbf{Task}. This can be initiated either by RITS itself (for example, when spawning a subproblem), or by the client.\\
     \textbf{$=>$(T)} & Respond to the preceding RITS action, which must have been \textbf{read\_answer}, with the client action~\textbf{student\_answers(T)}. \\
+    \textbf{*} & The precise meaning of \textbf{*} depends on the next UTRITS element~$E$ in the sequence. In all cases, \textbf{*} means to \textit{ignore} all RITS actions, until:
+    \begin{itemize}
+    \item If $E$ has the form \textbf{$=>$(T)} and the next RITS action is \textbf{read\_answer}, in which case \textbf{student\_answers(T)} is sent to RITS and normal interaction is resumed.
+    \item If $E$ is a literal string and RITS emits a string that contains~$E$, in which case normal interaction is resumed.
+    \item If there is no next UTRITS element, then all further interaction is ignored.
+    \end{itemize}\\
     \hline
   \end{tabular}
 \caption{Admissible elements of UTRITS}
