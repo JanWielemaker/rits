@@ -129,7 +129,11 @@ rits_run_test([T|Ts]) :-
 action_test(A0, _, _) :-
         format("RITS says: ~q\n", [A0]),
         false.
-action_test(done, [], _) :- !.
+action_test(done, Ts, _) :- !,
+        (   Ts == [] -> true
+        ;   Ts == [*] -> true
+        ;   throw(rits_done_but_remaining_actions(Ts))
+        ).
 action_test(A0, [], _)   :- dif(A0, done), throw(not_done-A0).
 action_test(A0, [T|Ts0], S0) :-
         (   T == (*), Ts0 = [] -> true
