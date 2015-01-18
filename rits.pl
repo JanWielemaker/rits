@@ -107,13 +107,16 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         [internal(Expression),read_answer].
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   TERITS: Testing environment for RITS.
+   UTRITS: Unit Tests for RITS.
 
-   The testing language consists of elements like:
+   The language for unit tests consists of elements like:
 
        "Substring":   True if RITS emits a string containing Substring.
        =>(Answer):    Simulate student responding with Answer.
        Variable:      True for any RITS response.
+       *:             True for a sequence of RITS responses.
+
+   See the system architecture description for more information.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 rits_run_tests :-
@@ -132,7 +135,7 @@ action_test(A0, _, _) :-
 action_test(done, Ts, _) :- !,
         (   Ts == [] -> true
         ;   Ts == [*] -> true
-        ;   throw(rits_done_but_remaining_actions(Ts))
+        ;   throw(rits_done_but_remaining_elements(Ts))
         ).
 action_test(A0, [], _)   :- dif(A0, done), throw(not_done-A0).
 action_test(A0, [T|Ts0], S0) :-
