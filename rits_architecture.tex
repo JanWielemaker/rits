@@ -1,5 +1,7 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\newcommand{\pslisting}[1]{\hrule\vskip0.2cm\includegraphics{#1}\vskip0.2cm\hrule}
 \begin{document}
 \noindent
 \begin{center}
@@ -210,7 +212,23 @@ Table~\ref{tab:utrits}.
   \label{tab:utrits}
 \end{table}
 
+A sample unit test and its result is shown in Fig.~\ref{snip:utrits}.
+Notice how messaging flips between server and client, just like in
+a real-world example of using RITS.
 
+Due to the side-effect free and declarative nature of LORITS, it is
+easy to detect when users must be queried for a response, and to
+simulate user input. Unit tests that cover many possible interaction
+patterns can therefore be formulated quickly and conveniently with
+UTRITS.
+
+
+\begin{figure}[ht]
+  \centering
+  \pslisting{utrits.ps}
+  \caption{Sample unit test with UTRITS}
+  \label{snip:utrits}
+\end{figure}
 
 \vfil
 \end{document}
