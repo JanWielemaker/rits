@@ -83,7 +83,7 @@ list_internals(Ls, Is) :-
 
 
 next_actions(next, Hist, Hist) -->
-        (   { Hist = [internal(_)|_] } ->
+        (   { Hist = [internal(I)|_], I \= (_=_) } ->
             { throw(expecting_student_answers) }
         ;   []
         ).
@@ -114,13 +114,17 @@ run_test([T|Ts]) :-
         rits_next_action(T, A, S0, S),
         action_test(A, Ts, S).
 
+action_test(A0, [], _) :- !,
+        (   A0 = done -> true
+        ;   throw(not_done-A0)
+        ).
 action_test(A0, [Var|Ts], S0) :-
         var(Var),
         !,
         A0 = Var,
         rits_next_action(next, A, S0, S),
         action_test(A, Ts, S).
-action_test(A0, [substring(Sub)|Ts], S0) :- !,
+action_test(A0, [*(Sub)|Ts], S0) :- !,
         (   A0 = format(F) -> true
         ;   A0 = format(F, _) -> true
         ;   throw(format_expected-A0)
@@ -129,9 +133,9 @@ action_test(A0, [substring(Sub)|Ts], S0) :- !,
         (   string_concat(_, Post, F),
             string_concat(Sub, _, Post) ->
             action_test(A, Ts, S)
-        ;   action_test(A, [substring(Sub)|Ts], S) % keep looking
+        ;   action_test(A, [*(Sub)|Ts], S) % keep looking
         ).
-action_test(A0, [=>(Answer)|Ts], S0) :-
+action_test(A0, [=>(Answer)|Ts], S0) :- !,
         (   A0 = read_answer -> true
         ;   throw(read_answer_expected)
         ),
@@ -164,9 +168,6 @@ observe_(_, A, S0, S) :-
         rits_next_action(next, A1, S0, S1),
         observe_(A1, A, S1, S).
 
-%?- rits:observe(solve(cm(1,2)), A, S).
-
-%?- rits_start(S0), rits_next_action(next, A, S0, S).
 
 % :- initialization(run_tests).
 
@@ -174,4 +175,8 @@ observe_(_, A, S0, S) :-
 
 ?- rits_start(S0), rits_next_action(solve(1/2+3/4), A, S0, S).
 
+?- rits:observe(solve(cm(1,2)), A, S).
+?- rits:run_test([solve(cm(1,2)),M,=>(4),N]).
+?- rits:run_test([solve(cm(1,2)),*("multiple"),=>(4)]).
+?- rits:run_test([solve(cm(1,2)),*("multiple"),=>(4),*("correct"),*("smaller")]).
 */
