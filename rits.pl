@@ -143,7 +143,7 @@ action_test(A0, [T|Ts0], S0) :-
         ;   (   test_action_rest(T, A0, A, Ts0, Ts) -> true
             ;   throw(test_mismatch(T,A0))
             ),
-            format("I say: ~q\n", [A]),
+            format("Client says: ~q\n", [A]),
             rits_next_action(A, Next, S0, S),
             action_test(Next, Ts, S)
         ).
