@@ -1,1 +1,7 @@
-*) Full "and" Fraction
+*) support 'Full "and" Fraction' syntax for fractions
+*) use same language for exam situations as well as drilling/explanation?
+
+    Options:
+
+         - LORITS markers for informational texts, subproblems, guidance, ...
+         - separate RITS actions for assessing correctness of an answer?
