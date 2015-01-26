@@ -93,9 +93,13 @@ next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
 next_actions(student_answers(A), Hist0, Hist) -->
         { Hist0 = [internal(Expr)|Rest],
           Hist = [internal(Expr=A)|Rest],
-          list_internals(Hist, Is) },
-        actions(Expr, A, Is),
-        !. % commit to first solution
+          list_internals(Hist, Is),
+          once(phrase(actions(Expr, A, Is), As0)), % commit to first match
+          (   memberchk(solve(T), Hist) ->
+              maplist(again_means(solve(T)), As0, As)
+          ;   As = As0
+          ) },
+        As.
 next_actions(subproblem(Ls), Hist, Hist) --> [enter], Ls, [exit].
 next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         (   { Hist = [_,solve(Expression)|_] } ->
@@ -105,6 +109,11 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         solve(Expression),
         !, % commit to first solution
         [internal(Expression),read_answer].
+
+again_means(T, A0, A) :-
+        (   A0 == again -> A = T
+        ;   A = A0
+        ).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    UTRITS: Unit Tests for RITS.

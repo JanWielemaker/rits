@@ -19,7 +19,7 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
         (   { Answer0 = X / Y } ->
             (   { Y = 0 } ->
                 [format("The denominator of a fraction cannot be 0.\n"),
-                 solve(cancel(A/B))]
+                 again]
             ;   { A rdiv B =:= X rdiv Y } ->
                 [format("Good, the solution is correct")],
                 (   { gcd(X,Y) =:= 1 } ->
@@ -28,17 +28,17 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
                 )
             ;   [format("This is wrong!\n")],
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
-                [solve(cancel(A/B))]
+                [again]
             )
         ;   { integer(Answer0) } ->
             (   { A mod B =:= 0, Answer0 =:= A//B } ->
                 [format("Good, the solution is correct and also minimal. Very nice!\n\n")]
             ;   [format("This is wrong!\n")],
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
-                [solve(cancel(A/B))]
+                [again]
             )
         ;   [format("The answer must be an integer or a fraction.\n"),
-             solve(cancel(A/B))]
+             again]
         ).
 rits:actions(Expression0, Answer0, Hist) -->
         { to_rational(Expression0, Expression),
@@ -52,7 +52,7 @@ rits:actions(Expression0, Answer0, Hist) -->
             )
         ;   [format("This is wrong.\n")],
             help_for_wrong_answer(Expression0, Answer0, Hist),
-            [solve(Expression0)]
+            [again]
         ).
 
 
