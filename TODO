@@ -5,3 +5,6 @@
 
          - LORITS markers for informational texts, subproblems, guidance, ...
          - separate RITS actions for assessing correctness of an answer?
+
+*) introduce LORITS element "wrong", which would implicitly call
+   help_for_wrong_answer//3, followed by "again"?
