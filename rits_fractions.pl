@@ -12,7 +12,7 @@ rits:solve(A/B + C/D) -->
         "Please solve:\n\n~t~10+",
         [fraction_layout(A/B + C/D)].
 rits:solve(cancel(X/Y)) -->
-        "Please cancel common divisors in:\n\n~t~10+",
+        "Please simplify the fraction:\n\n~t~10+",
         [fraction_layout(X/Y)].
 
 
