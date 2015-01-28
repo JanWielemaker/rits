@@ -22,7 +22,7 @@ rits:actions(cancel(A/B), Answer0, _) -->
                 wrong("The denominator of a fraction cannot be 0.\n")
             ;   { A rdiv B =:= X rdiv Y } ->
                 "Good, the solution is correct",
-                (   { gcd(X,Y) =:= 1 } ->
+                (   { gcd(X,Y) =:= 1, Y =\= 1 } ->
                     " and also minimal. Very nice!\n\n"
                 ;   ", but not minimal.\n",
                     solve(cancel(X/Y))
