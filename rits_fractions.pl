@@ -2,6 +2,7 @@
 :- module(rits_fractions, []).
 
 :- use_module(rits_common_multiple).
+:- use_module(lorits).
 
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
@@ -18,27 +19,27 @@ rits:solve(cancel(X/Y)) -->
 rits:actions(cancel(A/B), Answer0, Hist) -->
         (   { Answer0 = X / Y } ->
             (   { Y = 0 } ->
-                [format("The denominator of a fraction cannot be 0.\n"),
-                 again]
+                [format("The denominator of a fraction cannot be 0.\n")],
+                 again
             ;   { A rdiv B =:= X rdiv Y } ->
                 [format("Good, the solution is correct")],
                 (   { gcd(X,Y) =:= 1 } ->
                     [format(" and also minimal. Very nice!\n\n")]
                 ;   [format(", but not minimal.\n"), solve(cancel(X/Y))]
                 )
-            ;   [format("This is wrong!\n")],
+            ;   wrong,
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
-                [again]
+                again
             )
         ;   { integer(Answer0) } ->
             (   { A mod B =:= 0, Answer0 =:= A//B } ->
                 [format("Good, the solution is correct and also minimal. Very nice!\n\n")]
-            ;   [format("This is wrong!\n")],
+            ;   wrong,
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
-                [again]
+                again
             )
-        ;   [format("The answer must be an integer or a fraction.\n"),
-             again]
+        ;   [format("The answer must be an integer or a fraction.\n")],
+             again
         ).
 rits:actions(Expression0, Answer0, Hist) -->
         { to_rational(Expression0, Expression),
@@ -50,9 +51,9 @@ rits:actions(Expression0, Answer0, Hist) -->
                 [format(" and also minimal. Very nice!\n\n")]
             ;   [format(", but not minimal.\n"), solve(cancel(Answer0))]
             )
-        ;   [format("This is wrong.\n")],
+        ;   wrong,
             help_for_wrong_answer(Expression0, Answer0, Hist),
-            [again]
+            again
         ).
 
 

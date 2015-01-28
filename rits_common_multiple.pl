@@ -1,6 +1,8 @@
 
 :- module(rits_common_multiple, [least_common_multiple/3]).
 
+:- use_module(lorits).
+
 rits:solve(cm(X,Y)) -->
         [format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y])].
 
@@ -9,7 +11,8 @@ rits:actions(cm(X,Y), Answer, _) -->
         [format("A common multiple must be an integer!\n"), solve(cm(X,Y))].
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer = 0, ( X =\= 0 ; Y =\= 0) },
-        [format("This is wrong. The solution must be greater than 0.\n"),
+        wrong,
+        [format("The solution must be greater than 0.\n"),
          solve(cm(X,Y))].
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
@@ -20,7 +23,7 @@ rits:actions(cm(X,Y), Answer, _) -->
         ;   [format(". There is also a smaller solution!\n")]
         ).
 rits:actions(cm(X,Y), Answer, Hist) -->
-        [format("This is wrong.\n")],
+        wrong,
         help_for_wrong_answer(cm(X,Y), Answer, Hist),
         [solve(cm(X,Y))].
 
