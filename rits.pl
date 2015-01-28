@@ -55,7 +55,7 @@ rits_history(s(_,Hist0), Hist) :- reverse(Hist0, Hist).
 
 rits_next_action(Action0, Action, S0, S) :-
         rits_next_action_(Action0, Action1, S0, S1),
-        (   (   internal(Action1) ;  Action1 = subproblem(_) ) ->
+        (   skip_action(Action1) ->
             rits_next_action(Action1, Action, S1, S)
         ;   Action = Action1,
             S = S1
@@ -91,6 +91,9 @@ all_codes([C|Cs], Rest) -->
         (   { integer(C) } -> [C], all_codes(Cs, Rest)
         ;   { Rest = [C|Cs] }
         ).
+
+skip_action(internal(_)).   % used to remember the task at hand
+skip_action(subproblem(_)).
 
 internal(internal(_)).
 
