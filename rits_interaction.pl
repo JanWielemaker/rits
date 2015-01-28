@@ -57,7 +57,12 @@ interpret_action(enter, next).
 interpret_action(exit, next).
 interpret_action(format(F,As), next)       :- format(F, As).
 interpret_action(format(F), next)          :- format(F).
-interpret_action(read_answer, student_answers(T)) :- nl, read_answer(T).
+interpret_action(read_answer, student_answers(T)) :-
+        nl,
+        read_answer(T),
+        (   T == end_of_file -> throw(eof)
+        ;   true
+        ).
 interpret_action(solve(Expr), solve(Expr)).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -121,6 +126,10 @@ multiple_choice_sample :-
 ?- solve_with_student(1/2-3/4).
 
 ?- rits:rits_run_tests.
+
+?- rits:rits_run_test([solve(1/2+3/4),*,=>(a),*]).
+
+?- rits:rits_run_test([solve(cm(2,4)),*,=>(2),*,solve(_),*,=>(2),*,solve(_),*,=>(2),"hard time",*]).
 
 ?- rits:rits_run_test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(5/4),"nice"]).
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
