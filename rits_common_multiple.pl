@@ -28,17 +28,17 @@ rits:actions(cm(_,_), _, _) --> help.
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
-help --> help(rits_common_multiple:help_for_wrong_answer).
+help --> help(rits_common_multiple:help).
 
-help_for_wrong_answer(cm(X,Y), _, Hist) -->
+help(cm(X,Y), _, Hist) -->
         { Hist = [cm(X,Y)=_,cm(X,Y)=_,cm(X,Y)=_|_] },
         "I see you are having a hard time with this.\n",
         { CM is X*Y },
         format("Hint: ~w * ~w = ~w is a possible solution.\n", [X,Y,CM]).
-help_for_wrong_answer(cm(X,Y), A, _) -->
+help(cm(X,Y), A, _) -->
         { A mod X =\= 0 },
         format("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,X]).
-help_for_wrong_answer(cm(X,Y), A, _) -->
+help(cm(X,Y), A, _) -->
         { A mod Y =\= 0 },
         format("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A,X,Y,A,Y]).
 
