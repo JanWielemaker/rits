@@ -82,6 +82,10 @@ nexts_action_nexts([Action0|Nexts0], Action, Nexts) :-
         ;   string(Action0) ->
             Action = format(Action0),
             Nexts = Nexts0
+        ;   Action0 = help_phrase(Goal) ->
+            once(phrase(Goal, As)),
+            append(As, Nexts0, Nexts1),
+            nexts_action_nexts(Nexts1, Action, Nexts)
         ;   Action = Action0,
             Nexts = Nexts0
         ).
@@ -114,9 +118,10 @@ next_actions(student_answers(A), Hist0, Hist) -->
           Hist = [internal(Expr=A)|Rest],
           list_internals(Hist, Is),
           once(phrase(actions(Expr, A, Is), As0)), % commit to first match
+          maplist(expand_help(Expr, A, Hist0), As0, As1),
           (   memberchk(solve(T), Hist) ->
-              maplist(again_means(solve(T)), As0, As)
-          ;   As = As0
+              maplist(again_means(solve(T)), As1, As)
+          ;   As = As1
           ) },
         As.
 next_actions(subproblem(Ls), Hist, Hist) --> [enter], Ls, [exit].
@@ -131,6 +136,23 @@ next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
 
 again_means(T, A0, A) :-
         (   A0 == again -> A = T
+        ;   A = A0
+        ).
+
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   The LORITS element "help(Module:Pred)" means to ask Pred in Module
+   for further actions, where Pred is called with task, student's
+   answer, and interaction history.
+
+   During exams and drilling exercises, we can immediately turn off
+   the system's guiding messages and sub-tasks by simply interpreting
+   this LORITS element differently.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+
+expand_help(Task, Answer, History, A0, A) :-
+        (   A0 = help(M:DCG) ->
+            A1 =.. [DCG, Task, Answer, History],
+            A = help_phrase(M:A1)
         ;   A = A0
         ).
 
