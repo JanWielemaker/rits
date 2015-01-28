@@ -74,7 +74,23 @@ rits_next_action_(Action0, Action, S0, s(Nexts,Hist)) :-
         nexts_action_nexts(Nexts1, Action, Nexts).
 
 nexts_action_nexts([], done, []).
-nexts_action_nexts([Action|Nexts], Action, Nexts).
+nexts_action_nexts([Action0|Nexts0], Action, Nexts) :-
+        (   integer(Action0) ->
+            phrase(all_codes([Action0|Nexts0], Nexts), Codes),
+            string_codes(String, Codes),
+            Action = format(String)
+        ;   string(Action0) ->
+            Action = format(Action0),
+            Nexts = Nexts0
+        ;   Action = Action0,
+            Nexts = Nexts0
+        ).
+
+all_codes([], []) --> [].
+all_codes([C|Cs], Rest) -->
+        (   { integer(C) } -> [C], all_codes(Cs, Rest)
+        ;   { Rest = [C|Cs] }
+        ).
 
 internal(internal(_)).
 
