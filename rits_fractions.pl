@@ -60,7 +60,7 @@ rits:actions(Expression0, Answer0, Hist) -->
 help_for_wrong_answer(cancel(A/B), _, Hist) -->
         { Hist = [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_] },
         "I see you are having a hard time with this.\n",
-        [format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])].
+        format("Hint: Find a common divisor of ~w and ~w.\n", [A,B]).
 help_for_wrong_answer(_/B + _/D, _/Y, _) -->
         { least_common_multiple(B, D, Y) },
         "The denominator is suitable, but the numerator is wrong!\n".
@@ -74,11 +74,11 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
           X =:= A + C },
         "You cannot just sum the numerators when the denominators are different!\n\n",
         (   { member(cm(B,D)=Answer, Hist), least_common_multiple(B,D,Answer) } ->
-            [format("Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
-             format("First rewrite the fractions so that the denominator is ~w for both, then add.\n", [Answer])]
+            format("Recall that you have already found the least common multiple of ~w and ~w!\n", [B,D]),
+            format("First rewrite the fractions so that the denominator is ~w for both, then add.\n", [Answer])
         ;   { member(cm(B,D)=Answer, Hist), Answer =\= 0, Answer mod B =:= 0, Answer mod D =:= 0 } ->
-            [format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
-             "You can either use that, or find a smaller multiple to make it easier.\n"]
+            format("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [B,D,Answer]),
+             "You can either use that, or find a smaller multiple to make it easier.\n"
         ;   [subproblem([format("Let us first find a common multiple of ~w and ~w!\n", [B,D]),
                          solve(cm(B,D)),
                          "Now apply this knowledge to the original task!\n"])]
@@ -89,10 +89,10 @@ help_for_wrong_answer(A/B + C/D, Answer0, _) -->
         "You should not sum the denominators, but only the numerators!\n".
 help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
         { Y mod B =\= 0 },
-        [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B])].
+        format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B]).
 help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
-        [format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D])].
+        format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D]).
 
 % Fallback
 
