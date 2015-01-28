@@ -56,22 +56,22 @@ rits:actions(Expression0, Answer0, _) -->
             again
         ).
 
-help --> help(rits_fractions:help_for_wrong_answer).
+help --> help(rits_fractions:help).
 
-help_for_wrong_answer(cancel(A/B), _, Hist) -->
+help(cancel(A/B), _, Hist) -->
         { Hist = [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_] },
         "I see you are having a hard time with this.\n",
         format("Hint: Find a common divisor of ~w and ~w.\n", [A,B]).
 
-help_for_wrong_answer(_/B + _/D, _/Y, _) -->
+help(_/B + _/D, _/Y, _) -->
         { least_common_multiple(B, D, Y) },
         "The denominator is suitable, but the numerator is wrong!\n".
-help_for_wrong_answer(_/B + _/D, _/Y, _) -->
+help(_/B + _/D, _/Y, _) -->
         { Y mod B =:= 0,
           Y mod D =:= 0 },
         "The denominator is suitable, but the numerator is wrong!\n",
         "Use a smaller common multiple as denominator to make this easier.\n".
-help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
+help(A/B + C/D, X / _, Hist) -->
         { B =\= D,
           X =:= A + C },
         "You cannot just sum the numerators when the denominators are different!\n\n",
@@ -85,20 +85,20 @@ help_for_wrong_answer(A/B + C/D, X / _, Hist) -->
                         solve(cm(B,D)),
                         "Now apply this knowledge to the original task!\n"])
         ).
-help_for_wrong_answer(A/B + C/D, Answer0, _) -->
+help(A/B + C/D, Answer0, _) -->
         { to_rational(Answer0, Answer),
           Answer =:= (A + C) rdiv (B + D) },
         "You should not sum the denominators, but only the numerators!\n".
-help_for_wrong_answer(_/B + _/_, _ / Y, _) -->
+help(_/B + _/_, _ / Y, _) -->
         { Y mod B =\= 0 },
         format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,B]).
-help_for_wrong_answer(_/_ + _/D, _ / Y, _) -->
+help(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
         format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D]).
 
 % Fallback
 
-help_for_wrong_answer(_, _, _) -->
+help(_, _, _) -->
         "Unfortunately, I cannot give any useful hints here.\n".
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
