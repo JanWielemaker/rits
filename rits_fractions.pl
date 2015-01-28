@@ -19,8 +19,7 @@ rits:solve(cancel(X/Y)) -->
 rits:actions(cancel(A/B), Answer0, _) -->
         (   { Answer0 = X / Y } ->
             (   { Y = 0 } ->
-                "The denominator of a fraction cannot be 0.\n",
-                 again
+                wrong("The denominator of a fraction cannot be 0.\n")
             ;   { A rdiv B =:= X rdiv Y } ->
                 "Good, the solution is correct",
                 (   { gcd(X,Y) =:= 1 } ->
