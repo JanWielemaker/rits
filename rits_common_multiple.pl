@@ -8,20 +8,20 @@ rits:solve(cm(X,Y)) -->
 
 rits:actions(cm(_,_), Answer, _) -->
         { \+ integer(Answer) },
-        [format("A common multiple must be an integer!\n")],
+        "A common multiple must be an integer!\n",
         again.
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer = 0, ( X =\= 0 ; Y =\= 0) },
         wrong,
-        [format("The solution must be greater than 0.\n")],
+        "The solution must be greater than 0.\n",
         again.
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
           Answer mod Y =:= 0 },
-        [format("Good, the solution is correct")],
+        "Good, the solution is correct",
         (   { least_common_multiple(X, Y, Answer) } ->
-            [format(" and also minimal. Very nice!\n\n")]
-        ;   [format(". There is also a smaller solution!\n")]
+            " and also minimal. Very nice!\n\n"
+        ;   ". There is also a smaller solution!\n"
         ).
 rits:actions(cm(X,Y), Answer, Hist) -->
         wrong,
@@ -32,7 +32,7 @@ least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
 help_for_wrong_answer(cm(X,Y), _, Hist) -->
         { Hist = [cm(X,Y)=_,cm(X,Y)=_,cm(X,Y)=_|_] },
-        [format("I see you are having a hard time with this.\n")],
+        "I see you are having a hard time with this.\n",
         { CM is X*Y },
         [format("Hint: ~w * ~w = ~w is a possible solution.\n", [X,Y,CM])].
 help_for_wrong_answer(cm(X,Y), A, _) -->
