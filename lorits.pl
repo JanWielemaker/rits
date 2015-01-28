@@ -5,6 +5,7 @@
 :- module(lorits, [
                    again//0,
                    format//2,
+                   help//1,
                    solve//1,
                    subproblem//1,
                    wrong//0
@@ -19,3 +20,5 @@ format(Str, Args) --> [format(Str, Args)].
 solve(Task) --> [solve(Task)].
 
 subproblem(P) --> [subproblem(P)].
+
+help(Pred) --> wrong, [help(Pred)], again.
