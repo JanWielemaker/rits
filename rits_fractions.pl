@@ -41,8 +41,7 @@ rits:actions(Expression0, Answer0, _) -->
         (   { to_rational(Answer0, Answer) } ->
             (   { catch(Expression =:= Answer,_,false) } ->
                 "Good, the solution is correct",
-                { Shorter is Answer },
-                (   { Shorter = Answer } ->
+                (   { Answer is Answer } ->
                     " and also minimal. Very nice!\n\n"
                 ;   ", but not minimal.\n",
                     solve(cancel(Answer0))
