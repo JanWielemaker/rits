@@ -12,3 +12,5 @@ wrong --> [format("This is wrong!\n")].
 again --> [again].
 
 format(Str, Args) --> [format(Str, Args)].
+
+solve(Task) --> [solve(Task)].
