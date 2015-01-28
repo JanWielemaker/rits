@@ -6,14 +6,15 @@
 rits:solve(cm(X,Y)) -->
         [format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y])].
 
-rits:actions(cm(X,Y), Answer, _) -->
+rits:actions(cm(_,_), Answer, _) -->
         { \+ integer(Answer) },
-        [format("A common multiple must be an integer!\n"), solve(cm(X,Y))].
+        [format("A common multiple must be an integer!\n")],
+        again.
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer = 0, ( X =\= 0 ; Y =\= 0) },
         wrong,
-        [format("The solution must be greater than 0.\n"),
-         solve(cm(X,Y))].
+        [format("The solution must be greater than 0.\n")],
+        again.
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
           Answer mod Y =:= 0 },
@@ -25,7 +26,7 @@ rits:actions(cm(X,Y), Answer, _) -->
 rits:actions(cm(X,Y), Answer, Hist) -->
         wrong,
         help_for_wrong_answer(cm(X,Y), Answer, Hist),
-        [solve(cm(X,Y))].
+        again.
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
