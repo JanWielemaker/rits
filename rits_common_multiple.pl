@@ -8,6 +8,7 @@ rits:solve(cm(X,Y)) -->
 
 rits:actions(cm(_,_), Answer, _) -->
         { \+ integer(Answer) },
+        wrong,
         "A common multiple must be an integer!\n",
         again.
 rits:actions(cm(X,Y), Answer, _) -->
