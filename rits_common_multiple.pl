@@ -8,14 +8,10 @@ rits:solve(cm(X,Y)) -->
 
 rits:actions(cm(_,_), Answer, _) -->
         { \+ integer(Answer) },
-        wrong,
-        "A common multiple must be an integer!\n",
-        again.
+        wrong("A common multiple must be an integer!\n").
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer = 0, ( X =\= 0 ; Y =\= 0) },
-        wrong,
-        "The solution must be greater than 0.\n",
-        again.
+        wrong("The solution must be greater than 0.\n").
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
           Answer mod Y =:= 0 },

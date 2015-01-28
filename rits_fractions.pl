@@ -35,8 +35,7 @@ rits:actions(cancel(A/B), Answer0, _) -->
                 "Good, the solution is correct and also minimal. Very nice!\n\n"
             ;   help
             )
-        ;   "The answer must be an integer or a fraction.\n",
-             again
+        ;   wrong("The answer must be an integer or a fraction.\n")
         ).
 rits:actions(Expression0, Answer0, _) -->
         { to_rational(Expression0, Expression) },
@@ -51,9 +50,7 @@ rits:actions(Expression0, Answer0, _) -->
                 )
             ;   help
             )
-        ;   wrong,
-            "The answer must be an integer or a fraction.\n",
-            again
+        ;   wrong("The answer must be an integer or a fraction.\n")
         ).
 
 help --> help(rits_fractions:help).
