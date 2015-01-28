@@ -37,6 +37,12 @@ process_grammar_body(( _ -> Then ; Else)) :- !,
         process_grammar_body(Else).
 % for information, see what is being ignored
 %process_grammar_body(I) :- !, format("%% ignoring: ~w\n", [I]).
+process_grammar_body(Str) :-
+        string(Str),
+        !,
+        process_token(format(Str)).
+process_grammar_body(format(Str,Args)) :- !,
+        process_token(format(Str,Args)).
 process_grammar_body(_).
 
 process_token(format(Xs, _)) :- !,
