@@ -3,8 +3,10 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :- module(lorits, [
-                   wrong//0,
-                   again//0
+                   again//0,
+                   format//2,
+                   solve//1,
+                   wrong//0
                   ]).
 
 wrong --> [format("This is wrong!\n")].
