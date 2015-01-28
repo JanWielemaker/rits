@@ -39,17 +39,21 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
              again
         ).
 rits:actions(Expression0, Answer0, Hist) -->
-        { to_rational(Expression0, Expression),
-          to_rational(Answer0, Answer) },
-        (   { catch(Expression =:= Answer,_,false) } ->
-            "Good, the solution is correct",
-            { Shorter is Answer },
-            (   { Shorter = Answer } ->
-                " and also minimal. Very nice!\n\n"
-            ;   ", but not minimal.\n",
-                solve(cancel(Answer0))
+        { to_rational(Expression0, Expression) },
+        (   { to_rational(Answer0, Answer) } ->
+            (   { catch(Expression =:= Answer,_,false) } ->
+                "Good, the solution is correct",
+                { Shorter is Answer },
+                (   { Shorter = Answer } ->
+                    " and also minimal. Very nice!\n\n"
+                ;   ", but not minimal.\n",
+                    solve(cancel(Answer0))
+                )
+            ;   help_for_wrong_answer(Expression0, Answer0, Hist)
             )
-        ;   help_for_wrong_answer(Expression0, Answer0, Hist)
+        ;   wrong,
+            "The answer must be an integer or a fraction.\n",
+            again
         ).
 
 help_for_wrong_answer(Expr, Answer, Hist) -->
@@ -105,3 +109,4 @@ help_for_wrong_answer_(_, _, _) -->
 
 rits:test([solve(1/2 + 3/4),*,=>(5/4),"nice"]).
 rits:test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(5/4),"nice"]).
+rits:test([solve(1/2+3/4),*,=>(a),*]).
