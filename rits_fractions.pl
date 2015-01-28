@@ -25,7 +25,8 @@ rits:actions(cancel(A/B), Answer0, Hist) -->
                 "Good, the solution is correct",
                 (   { gcd(X,Y) =:= 1 } ->
                     " and also minimal. Very nice!\n\n"
-                ;   ", but not minimal.\n", [solve(cancel(X/Y))]
+                ;   ", but not minimal.\n",
+                    solve(cancel(X/Y))
                 )
             ;   wrong,
                 help_for_wrong_answer(cancel(A/B), Answer0, Hist),
@@ -49,7 +50,8 @@ rits:actions(Expression0, Answer0, Hist) -->
             { Shorter is Answer },
             (   { Shorter = Answer } ->
                 " and also minimal. Very nice!\n\n"
-            ;   ", but not minimal.\n", [solve(cancel(Answer0))]
+            ;   ", but not minimal.\n",
+                solve(cancel(Answer0))
             )
         ;   wrong,
             help_for_wrong_answer(Expression0, Answer0, Hist),
