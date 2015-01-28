@@ -118,7 +118,7 @@ next_actions(student_answers(A), Hist0, Hist) -->
           Hist = [internal(Expr=A)|Rest],
           list_internals(Hist, Is),
           once(phrase(actions(Expr, A, Is), As0)), % commit to first match
-          maplist(expand_help(Expr, A, Hist0), As0, As1),
+          maplist(expand_help(Expr, A, Is), As0, As1),
           (   memberchk(solve(T), Hist) ->
               maplist(again_means(solve(T)), As1, As)
           ;   As = As1
