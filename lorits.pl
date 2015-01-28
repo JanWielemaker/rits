@@ -8,10 +8,13 @@
                    help//1,
                    solve//1,
                    subproblem//1,
-                   wrong//0
+                   wrong//0,
+                   wrong//1
                   ]).
 
 wrong --> [format("This is wrong!\n")].
+
+wrong(Str) --> wrong, [format(Str)], again.
 
 again --> [again].
 
