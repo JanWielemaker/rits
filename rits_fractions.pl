@@ -113,3 +113,4 @@ rits:test([solve(1/2 + 3/4),*,=>(5/4),"nice"]).
 rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(5/4),"nice"]).
 rits:test([solve(1/2+3/4),*,=>(a),*]).
 rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(10/8),"not minimal",*,"simplify",*]).
+rits:test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
