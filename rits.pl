@@ -207,6 +207,9 @@ test_action_rest(Var, A0, next, Ts, Ts) :-
 test_action_rest(*, A0, A, [T|Ts0], Ts) :-
         (   skip_actions_to(T, A0) ->
             test_action_rest(T, A0, A, Ts0, Ts)
+        ;   A0 = solve(Task) ->
+            A = solve(Task),
+            Ts = [*,T|Ts0]
         ;   A = next,
 %            format("skipping: ~q, waiting for: ~w\n", [A0,T]),
             Ts = [*,T|Ts0]
