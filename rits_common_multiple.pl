@@ -8,10 +8,14 @@ rits:solve(cm(X,Y)) -->
 
 rits:actions(cm(_,_), Answer, _) -->
         { \+ integer(Answer) },
-        wrong("A common multiple must be an integer!\n").
+        wrong,
+        "A common multiple must be an integer!\n",
+        again.
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer = 0, ( X =\= 0 ; Y =\= 0) },
-        wrong("The solution must be greater than 0.\n").
+        wrong,
+        "The solution must be greater than 0.\n",
+        again.
 rits:actions(cm(X,Y), Answer, _) -->
         { Answer mod X =:= 0,
           Answer mod Y =:= 0 },
@@ -20,7 +24,7 @@ rits:actions(cm(X,Y), Answer, _) -->
             " and also minimal. Very nice!\n\n"
         ;   ". There is also a smaller solution!\n"
         ).
-rits:actions(cm(_,_), _, _) --> help.
+rits:actions(cm(_,_), _, _) --> wrong, help, again.
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
 
