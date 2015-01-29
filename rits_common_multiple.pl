@@ -47,7 +47,7 @@ help(cm(X,Y), A, _) -->
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 rits:test([solve(cm(1,2)),*,=>(3),"not divisible",*]).
-rits:test([solve(cm(1,2)),*,=>(3),"not divisible",*,solve(cm(1,2)),"again",*,=>(2),"nice"]).
+rits:test([solve(cm(1,2)),*,=>(3),"not divisible",*,"again",*,=>(2),"nice"]).
 rits:test([solve(cm(1,2)),*,=>(2),"minimal"]).
 rits:test([solve(cm(1,2)),"multiple",=>(4),"smaller"]).
-rits:test([solve(cm(2,4)),*,=>(2),*,solve(_),*,=>(2),*,solve(_),*,=>(2),"hard time",*]).
+rits:test([solve(cm(2,4)),*,=>(2),*,=>(2),*,=>(2),"hard time",*]).
