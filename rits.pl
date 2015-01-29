@@ -214,7 +214,7 @@ test_action_rest(*, A0, A, [T|Ts0], Ts) :-
 test_action_rest(Sub, A0, next, Ts0, Ts) :-
         string(Sub),
         (   action_string(A0, String) -> true
-        ;   throw(format_expected-A0)
+        ;   throw(looking_for(Sub)-got(A0))
         ),
         (   string_substring(String, Sub) ->
             Ts = Ts0
