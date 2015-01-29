@@ -110,6 +110,6 @@ help(_, _, _) -->
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 rits:test([solve(1/2 + 3/4),*,=>(5/4),"nice"]).
-rits:test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(5/4),"nice"]).
+rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(5/4),"nice"]).
 rits:test([solve(1/2+3/4),*,=>(a),*]).
-rits:test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(10/8),"not minimal",solve(_),"simplify",*]).
+rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(10/8),"not minimal",*,"simplify",*]).
