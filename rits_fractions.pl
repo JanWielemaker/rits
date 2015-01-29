@@ -62,7 +62,10 @@ help --> help(rits_fractions:help).
 help(cancel(A/B), _, Hist) -->
         { Hist = [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_] },
         "I see you are having a hard time with this.\n",
-        format("Hint: Find a common divisor of ~w and ~w.\n", [A,B]).
+        (   { A mod B =:= 0 } ->
+            "Hint: Write this fraction as a single integer.\n"
+        ;   format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])
+        ).
 
 help(_/B + _/D, _/Y, _) -->
         { least_common_multiple(B, D, Y) },
