@@ -83,7 +83,9 @@ nexts_action_nexts([Action0|Nexts0], Action, Nexts) :-
             Action = format(Action0),
             Nexts = Nexts0
         ;   Action0 = help_phrase(Goal) ->
-            once(phrase(Goal, As)),
+            (   phrase(Goal, As) -> true
+            ;   As = [] % no help available
+            ),
             append(As, Nexts0, Nexts1),
             nexts_action_nexts(Nexts1, Action, Nexts)
         ;   Action = Action0,
