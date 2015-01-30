@@ -100,10 +100,6 @@ help(_/_ + _/D, _ / Y, _) -->
         { Y mod D =\= 0 },
         format("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [Y,D]).
 
-% Fallback
-
-help(_, _, _) -->
-        "Unfortunately, I cannot give any useful hints here.\n".
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    Test cases.
