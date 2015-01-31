@@ -67,9 +67,12 @@ help(cancel(A/B), _, Hist) -->
         ;   format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])
         ).
 
-help(_/B + _/D, _/Y, _) -->
+help(_/B + _/D, _/Y, Hist) -->
         { least_common_multiple(B, D, Y) },
-        "The denominator is suitable, but the numerator is wrong!\n".
+        (   { Hist = [_=_/Y,_=_/Y,_=_/Y|_] } ->
+            "Do not just guess! Multiply correctly, then add!\n"
+        ;   "The denominator is suitable, but the numerator is wrong!\n"
+        ).
 help(_/B + _/D, _/Y, _) -->
         { Y mod B =:= 0,
           Y mod D =:= 0 },
@@ -110,3 +113,4 @@ rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(5/4),"nice"]).
 rits:test([solve(1/2+3/4),*,=>(a),*]).
 rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(10/8),"not minimal",*,"simplify",*]).
 rits:test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
+rits:test([solve(1/2+3/4),*,=>(1/4),*,=>(2/4),*,=>(3/4),"guess",*]).
