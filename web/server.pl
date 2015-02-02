@@ -26,5 +26,7 @@ pengines:prepare_module(Module, rits, _Options) :-
 
 :- http_handler(/, http_reply_from_files(., []), [prefix]).
 
+:- use_module('../rits').
+
 server(Port) :-
 	http_server(http_dispatch, [port(Port)]).
