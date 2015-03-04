@@ -1,0 +1,103 @@
+% TODO before giving the talk:
+% *) adjust the date shown on the first slide, see below
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+
+\setbeamerfont{page number in head/foot}{size=\large}
+
+% \defbeamertemplate{footline}{frame number}
+% {
+%   \hfill%
+%   \usebeamercolor[fg]{page number in head/foot}%
+%   \usebeamerfont{page number in head/foot}%
+%   \insertframenumber\,/\,\inserttotalframenumber\kern1em\vskip2pt%
+% }
+
+%\setbeamertemplate{footline}[frame number]
+
+%{\scriptsize\insertframenumber}}
+%\raisebox{5pt}{\makebox[\paperwidth]{\hfill\makebox[10pt]{\scriptsize\insertframenumber}}}}
+\setbeamertemplate{footline}{%
+  \hfill%
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \raisebox{5pt}{\insertframenumber}\kern1cm\vskip2pt%
+  }
+
+\begin{document}
+\setbeamertemplate{footline}{}
+\section{Title}
+\title{Improving Education in Mozambique}
+\author{Abel Viageiro}
+\date{\today}
+\date{March 26th, 2015}
+\maketitle
+
+%\relax\global\advance\c@framenumber by-1\relax%
+\setbeamertemplate{footline}{%
+  \hfill%
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \raisebox{5pt}{\insertframenumber}\kern0.25cm\vskip2pt%
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Current Issues}
+\begin{frame}{Current Issues}
+  Education:
+  \medskip
+  \begin{itemize}
+\item shortage of teachers
+
+\item corruption
+
+\item no centralized overview and assessment
+
+  \end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Our Vision}
+\begin{frame}{Our Vision}
+  \begin{itemize}
+  \item new electronic solution
+  \item accessible from all devices
+  \item many parts are freely accessible
+  \item centralized reporting
+  \item \dots
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{About Us}
+\begin{frame}{About Us}
+  Vamobi
+  \begin{itemize}
+  \item founded in 2014
+  \item based in Maputo
+  \item $n$ employees
+  \item \dots
+  \end{itemize}
+\end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{footline}{}
+\section{Thank you!}
+\begin{frame}{}
+  \vskip1.5cm
+  \begin{center}
+    \textbf{\Huge Thank you!}
+  \end{center}
+\end{frame}
+
+\end{document}
