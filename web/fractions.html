@@ -20,19 +20,24 @@
                      pengine_output(Atom)
                 ).
 
+            poutput("Please solve:\n\n~t~10+") :- pengine_output('Please solve:').
+            
+            
             interact_(format(F,Args), S0) :-
                 term_to_atom(F-Args, Action),
                 pengine_output(Action),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(format(F), S0) :-
-                term_to_atom(F, Atom),
-                %format(atom(Atom), F, []), % TODO: make this work
-                pengine_output(Atom),
+                (    poutput(F) -> true
+                ;    atom_string(Atom, F),
+                     pengine_output(Atom)
+                ),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(fraction_layout(F), S0) :-
-                term_to_atom(F, Action),
+                phrase(mathml(F), Ms),
+                atom_codes(Action, Ms),
                 pengine_output(Action),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
@@ -52,6 +57,19 @@
                 rits:rits_next_action(solve(T), A, S0, S),
                 interact(A, S).
 
+            mathml(M) --> "<math style=\"padding-left: 5%\">", mathml_(M), "</math>".
+
+            mathml_(I) --> { integer(I) }, !, "<mi style=\"font-size: 20; font-weight: bold;\">", format_(I), "</mi>".
+            mathml_(A/B) --> !, "<mfrac>", mathml_(A), mathml_(B), "</mfrac>".
+            mathml_(A+B) -->
+                    "<mrow>", mathml_(A), "</mrow>",
+                    "<mo>+</mo>",
+                    "<mrow>", mathml_(B), "</mrow>".
+
+            format_(Arg) --> call(format_dcg(Arg)).
+
+            format_dcg(Arg, Cs0, Cs) :- format(codes(Cs0,Cs), "~w", [Arg]).
+
       </script>
       <script>
             var pengine = new Pengine({
@@ -66,11 +84,13 @@
                 //pengine.respond(prompt(this.data));
             }
             function handleOutput() {
-                $('#out').append("<div class=\"rits\">" + this.data + "</div>").append("<br><br>");
+                var d = this.data;
+                $('#out').append("<div class=\"rits\">" + d + "</div>").append("<br>");
             }
       </script>
   </head>
-  <body>
+  <body style="padding-left: 5%; padding-right: 5%">
+    <br><br>
     <div id="out"></div>
     <form>
       Your answer:<br>
