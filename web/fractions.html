@@ -1,8 +1,8 @@
 <html lang="en">
   <head>
     <style>
-      .rits { color: black; }
-      .student { color: blue; font-weight: bold; padding-left: 5%}
+      .rits { color: black; font-size: 20;}
+      .student { color: blue; font-weight: bold; font-size: 20; padding-left: 5%}
     </style>
       
       <script src="/jquery-2.0.3.min.js"></script>
@@ -85,6 +85,7 @@
             }
             function handleOutput() {
                 var d = this.data;
+                if (d == "done") { d = "<br><span style=\"color: green\">Done.</span>"; }
                 $('#out').append("<div class=\"rits\">" + d + "</div>");
                 window.scrollTo(0,document.body.scrollHeight);
             }
