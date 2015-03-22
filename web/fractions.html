@@ -70,52 +70,8 @@
 
             format_dcg(Arg, Cs0, Cs) :- format(codes(Cs0,Cs), "~w", [Arg]).
 
-poutput("Let us first find a common multiple of ~w and ~w!\n", [B,D]) :-
-                           format(atom(C),
-                           "Let us first find a common multiple of ~w and ~w!\n",
-                           [B,D]),
-                           pengine_output(C).
-
 
 % Generated code follows.
-poutput("Please enter a common multiple of ~w and ~w:\n\n", [A, B]) :-
-	format(atom(C),
-	       "Please enter a common multiple of ~w and ~w:\n\n",
-	       [A, B]),
-	pengine_output(C).
-poutput("A common multiple must be an integer!\n") :-
-	format(atom(A), "A common multiple must be an integer!\n", []),
-	pengine_output(A).
-poutput("The solution must be greater than 0.\n") :-
-	format(atom(A), "The solution must be greater than 0.\n", []),
-	pengine_output(A).
-poutput("Good, the solution is correct") :-
-	format(atom(A), "Good, the solution is correct", []),
-	pengine_output(A).
-poutput(" and also minimal. Very nice!\n\n") :-
-	format(atom(A), " and also minimal. Very nice!\n\n", []),
-	pengine_output(A).
-poutput(". There is also a smaller solution!\n") :-
-	format(atom(A), ". There is also a smaller solution!\n", []),
-	pengine_output(A).
-poutput("I see you are having a hard time with this.\n") :-
-	format(atom(A), "I see you are having a hard time with this.\n", []),
-	pengine_output(A).
-poutput("Hint: ~w * ~w = ~w is a possible solution.\n", [A, B, C]) :-
-	format(atom(D),
-	       "Hint: ~w * ~w = ~w is a possible solution.\n",
-	       [A, B, C]),
-	pengine_output(D).
-poutput("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A, B, C, A, B]) :-
-	format(atom(D),
-	       "~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n",
-	       [A, B, C, A, B]),
-	pengine_output(D).
-poutput("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A, C, B, A, B]) :-
-	format(atom(D),
-	       "~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n",
-	       [A, C, B, A, B]),
-	pengine_output(D).
 poutput("Please solve:\n\n~t~10+") :-
 	format(atom(A), "Please solve:\n\n~t~10+", []),
 	pengine_output(A).
@@ -162,11 +118,6 @@ poutput("Hint: Write this fraction as a single integer.\n") :-
 	       "Hint: Write this fraction as a single integer.\n",
 	       []),
 	pengine_output(A).
-poutput("Hint: Find a common divisor of ~w and ~w.\n", [A, B]) :-
-	format(atom(C),
-	       "Hint: Find a common divisor of ~w and ~w.\n",
-	       [A, B]),
-	pengine_output(C).
 poutput("Do not just guess! Multiply correctly, then add!\n") :-
 	format(atom(A),
 	       "Do not just guess! Multiply correctly, then add!\n",
@@ -192,6 +143,65 @@ poutput("You cannot just sum the numerators when the denominators are different!
 	       "You cannot just sum the numerators when the denominators are different!\n\n",
 	       []),
 	pengine_output(A).
+poutput("You can either use that, or find a smaller multiple to make it easier.\n") :-
+	format(atom(A),
+	       "You can either use that, or find a smaller multiple to make it easier.\n",
+	       []),
+	pengine_output(A).
+poutput("You should not sum the denominators, but only the numerators!\n") :-
+	format(atom(A),
+	       "You should not sum the denominators, but only the numerators!\n",
+	       []),
+	pengine_output(A).
+poutput("A common multiple must be an integer!\n") :-
+	format(atom(A), "A common multiple must be an integer!\n", []),
+	pengine_output(A).
+poutput("The solution must be greater than 0.\n") :-
+	format(atom(A), "The solution must be greater than 0.\n", []),
+	pengine_output(A).
+poutput("Good, the solution is correct") :-
+	format(atom(A), "Good, the solution is correct", []),
+	pengine_output(A).
+poutput(" and also minimal. Very nice!\n\n") :-
+	format(atom(A), " and also minimal. Very nice!\n\n", []),
+	pengine_output(A).
+poutput(". There is also a smaller solution!\n") :-
+	format(atom(A), ". There is also a smaller solution!\n", []),
+	pengine_output(A).
+poutput("I see you are having a hard time with this.\n") :-
+	format(atom(A), "I see you are having a hard time with this.\n", []),
+	pengine_output(A).
+% TODO: generate clauses for subproblems automatically!
+poutput("Let us first find a common multiple of ~w and ~w!\n", [B,D]) :-
+                           format(atom(C),
+                           "Let us first find a common multiple of ~w and ~w!\n",
+                           [B,D]),
+                           pengine_output(C).
+poutput("Please enter a common multiple of ~w and ~w:\n\n", [A, B]) :-
+	format(atom(C),
+	       "Please enter a common multiple of ~w and ~w:\n\n",
+	       [A, B]),
+	pengine_output(C).
+poutput("Hint: ~w * ~w = ~w is a possible solution.\n", [A, B, C]) :-
+	format(atom(D),
+	       "Hint: ~w * ~w = ~w is a possible solution.\n",
+	       [A, B, C]),
+	pengine_output(D).
+poutput("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A, B, C, A, B]) :-
+	format(atom(D),
+	       "~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n",
+	       [A, B, C, A, B]),
+	pengine_output(D).
+poutput("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A, C, B, A, B]) :-
+	format(atom(D),
+	       "~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n",
+	       [A, C, B, A, B]),
+	pengine_output(D).
+poutput("Hint: Find a common divisor of ~w and ~w.\n", [A, B]) :-
+	format(atom(C),
+	       "Hint: Find a common divisor of ~w and ~w.\n",
+	       [A, B]),
+	pengine_output(C).
 poutput("Recall that you have already found the least common multiple of ~w and ~w!\n", [A, B]) :-
 	format(atom(C),
 	       "Recall that you have already found the least common multiple of ~w and ~w!\n",
@@ -207,16 +217,6 @@ poutput("Recall that you have already found a common multiple of ~w and ~w: ~w\n
 	       "Recall that you have already found a common multiple of ~w and ~w: ~w\n",
 	       [A, B, C]),
 	pengine_output(D).
-poutput("You can either use that, or find a smaller multiple to make it easier.\n") :-
-	format(atom(A),
-	       "You can either use that, or find a smaller multiple to make it easier.\n",
-	       []),
-	pengine_output(A).
-poutput("You should not sum the denominators, but only the numerators!\n") :-
-	format(atom(A),
-	       "You should not sum the denominators, but only the numerators!\n",
-	       []),
-	pengine_output(A).
 poutput("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [A, B]) :-
 	format(atom(C),
 	       "~w cannot be a common denominator, because it cannot be divided by ~w.\n",
@@ -227,8 +227,6 @@ poutput("~w cannot be a common denominator, because it cannot be divided by ~w.\
 	       "~w cannot be a common denominator, because it cannot be divided by ~w.\n",
 	       [A, B]),
 	pengine_output(C).
-
-                           
       </script>
       <script>
             var pengine = new Pengine({
