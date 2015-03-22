@@ -1,8 +1,13 @@
 <html lang="en">
-    <head>
-        <script src="/jquery-2.0.3.min.js"></script>
-        <script src="/pengines.js"></script>
-        <script type="text/x-prolog">
+  <head>
+    <style>
+      .rits { color: green; }
+      .student { color: blue; }
+    </style>
+      
+      <script src="/jquery-2.0.3.min.js"></script>
+      <script src="/pengines.js"></script>
+      <script type="text/x-prolog">
 
             main :-
                 rits:rits_start(S0),
@@ -47,25 +52,45 @@
                 rits:rits_next_action(solve(T), A, S0, S),
                 interact(A, S).
 
-        </script>
-        <script>
+      </script>
+      <script>
             var pengine = new Pengine({
                 oncreate: handleCreate,
-                onprompt: handlePrompt,
+                // onprompt: handlePrompt,
                 onoutput: handleOutput
             });
             function handleCreate() {
                 pengine.ask('main');
             }
             function handlePrompt() {
-                pengine.respond(prompt(this.data));
+                //pengine.respond(prompt(this.data));
             }
             function handleOutput() {
-                $('#out').append(this.data).append("<br><br>");
+                $('#out').append("<div class=\"rits\">" + this.data + "</div>").append("<br><br>");
             }
-        </script>
-    </head>
-    <body>
-        <div id="out"></div>
-    </body>
+      </script>
+  </head>
+  <body>
+    <div id="out"></div>
+    <form>
+      Your answer:<br>
+      <input type="text" id="studentInput">
+    </form>
+  </body>
+  <script>
+    console.log("loaded!");
+    //console.log(typeof($('#studentInput')));
+    $("#studentInput").focus(function () { console.log("focus"); });
+    $("#studentInput").keydown(function (ev) {
+        if (ev.keyCode == 13) {
+
+            var r = this.value;
+            $('#out').append("<div class=\"student\">" + r + "</div><br>");
+            this.value = '';
+            ev.preventDefault();
+            pengine.respond(r);
+        }
+    });
+    
+  </script>
 </html>
