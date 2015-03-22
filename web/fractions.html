@@ -1,8 +1,8 @@
 <html lang="en">
   <head>
     <style>
-      .rits { color: green; }
-      .student { color: blue; }
+      .rits { color: black; }
+      .student { color: blue; font-weight: bold; padding-left: 5%}
     </style>
       
       <script src="/jquery-2.0.3.min.js"></script>
@@ -57,7 +57,7 @@
                 rits:rits_next_action(solve(T), A, S0, S),
                 interact(A, S).
 
-            mathml(M) --> "<math style=\"padding-left: 5%\">", mathml_(M), "</math>".
+            mathml(M) --> "<br><math style=\"padding-left: 5%\">", mathml_(M), "</math>".
 
             mathml_(I) --> { integer(I) }, !, "<mi style=\"font-size: 20; font-weight: bold;\">", format_(I), "</mi>".
             mathml_(A/B) --> !, "<mfrac>", mathml_(A), mathml_(B), "</mfrac>".
@@ -85,13 +85,15 @@
             }
             function handleOutput() {
                 var d = this.data;
-                $('#out').append("<div class=\"rits\">" + d + "</div>").append("<br>");
+                $('#out').append("<div class=\"rits\">" + d + "</div>");
             }
       </script>
   </head>
   <body style="padding-left: 5%; padding-right: 5%">
     <br><br>
     <div id="out"></div>
+    <br>
+    <hr style="width:10cm; margin-left: 0pt;">
     <form>
       Your answer:<br>
       <input type="text" id="studentInput">
@@ -105,7 +107,7 @@
         if (ev.keyCode == 13) {
 
             var r = this.value;
-            $('#out').append("<div class=\"student\">" + r + "</div><br>");
+            $('#out').append("<br><div class=\"student\">" + r + "</div><br>");
             this.value = '';
             ev.preventDefault();
             pengine.respond(r);
