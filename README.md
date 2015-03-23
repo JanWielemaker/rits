@@ -13,7 +13,7 @@ Vamobi TA to help pupils, teachers and administrators in Mozambique.*
 
 
 
-Example invaction on the console:
+Example invocation on the console:
 
     $ swipl -q -f rits_interaction.pl -g "solve_with_student(1/2+3/4)"
 
