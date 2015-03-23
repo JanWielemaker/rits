@@ -40,6 +40,8 @@ rits:actions(cancel(A/B), Answer0, _) -->
             "The answer must be an integer or a fraction.\n",
             again
         ).
+rits:actions(_, _/0, _) -->
+        wrong, "The denominator of a fraction cannot be 0.", again.
 rits:actions(Expression0, Answer0, _) -->
         { to_rational(Expression0, Expression) },
         (   { to_rational(Answer0, Answer) } ->
