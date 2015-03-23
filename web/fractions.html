@@ -113,7 +113,7 @@
     $("#studentInput").keydown(function (ev) {
         if (ev.keyCode == 13) {
 
-            var r = this.value;
+            var r = this.value.replace(".", "");
             $('#out').append("<br><div class=\"student\">" + r + "</div><br>");
             this.value = '';
             ev.preventDefault();
