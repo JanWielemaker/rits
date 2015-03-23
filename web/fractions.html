@@ -87,7 +87,10 @@
                     });
                     str = str.replace("~t", "").replace("~10+", "");
                 }
-                if (str == "done") { str = "<br><span style=\"color: green\">Done.</span>"; }
+                if (str == "done") {
+                    str = "<br><span style=\"color: green\">Done.</span>";
+                    $('#yourAnswer').hide();
+                }
                 $('#out').append("<div class=\"rits\">" + str + "</div>");
                 window.scrollTo(0,document.body.scrollHeight);
             }
@@ -97,8 +100,8 @@
     <br><br>
     <div id="out"></div>
     <br>
-    <hr style="width:10cm; margin-left: 0pt;">
-    <form>
+    <form id="yourAnswer">
+      <hr style="width:10cm; margin-left: 0pt;">
       Your answer:<br>
       <input type="text" id="studentInput">
     </form>
