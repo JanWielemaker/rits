@@ -1,17 +1,18 @@
-
-
-RITS: Rule-based Intelligent Tutoring System.
+# RITS: Rule-based Intelligent Tutoring System
 
 RITS implements a domain-specific language for guiding students
-through solving tasks. See rits_fractions.pl for a use case.
+through solving tasks. See **rits_fractions.pl** for the definition of a concrete use case.
 
-See rits_architecture.pdf for more information.
+See **rits_architecture.pdf** for more information.
 
-Developed in cooperation with Vamobi. Intended for inclusion in
-Vamobi TA to help pupils, teachers and administrators in Mozambique.
+See the **/web** directory for web-based access. 
+
+*Developed in cooperation with Vamobi. Intended for inclusion in
+Vamobi TA to help pupils, teachers and administrators in Mozambique.*
 
 
-An example interaction is:
+
+An example interaction on the console is:
 
     $ swipl -q -f rits_interaction.pl
 
