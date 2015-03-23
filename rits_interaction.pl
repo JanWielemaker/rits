@@ -14,19 +14,6 @@ example(2, 1/4 + 2/4).
 example(3, 1/3 + 1/2).
 example(4, 1/5 + 2/3).
 
-read_answer(T) :-
-        read(R),
-        (   var(R) ->
-            format("    please enter a concrete solution\n"),
-            read_answer(T)
-        ;   integer(R) -> T = R
-        ;   R = A / B -> T = A / B
-        ;   atom(R) -> T = R
-        ;   format("    please enter a concrete solution\n"),
-            read_answer(T)
-        ).
-
-
 solve_with_student(Expression) :-
         rits_start(S0),
         interact_until_done(solve(Expression), S0).
@@ -59,7 +46,7 @@ interpret_action(format(F,As), next)       :- format(F, As).
 interpret_action(format(F), next)          :- format(F).
 interpret_action(read_answer, student_answers(T)) :-
         nl,
-        read_answer(T),
+        read(T),
         (   T == end_of_file -> throw(eof)
         ;   true
         ).
@@ -122,10 +109,17 @@ multiple_choice_sample :-
 
 ?- rits:rits_run_test([solve(cancel(10/5)),*,=>(2/0),*]).
 
+?- rits:rits_run_test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(10/8),"not minimal",solve(_),"simplify",*]).
 ?- solve_with_student(cm(1,2)).
 ?- solve_with_student(1/2-3/4).
 
 ?- rits:rits_run_tests.
+
+?- rits:rits_run_test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
+
+?- solve_with_student(1/2+1/2).
+
+?- rits:rits_run_test([solve(cancel(2/2)),*,=>(2/2),*,solve(_),**]).
 
 ?- rits:rits_run_test([solve(1/2+3/4),*,=>(a),*]).
 
