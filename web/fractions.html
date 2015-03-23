@@ -22,17 +22,11 @@
 
             
             interact_(format(F,Args), S0) :-
-                (    poutput(F, Args) -> true
-                ;    term_to_atom(F-Args, Action),
-                     pengine_output(Action)
-                ),
+                pengine_output(format(F, Args)),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(format(F), S0) :-
-                (    poutput(F) -> true
-                ;    atom_string(Atom, F),
-                     pengine_output(Atom)
-                ),
+                pengine_output(format(F)),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(fraction_layout(F), S0) :-
@@ -69,164 +63,6 @@
             format_(Arg) --> call(format_dcg(Arg)).
 
             format_dcg(Arg, Cs0, Cs) :- format(codes(Cs0,Cs), "~w", [Arg]).
-
-
-% Generated code follows.
-poutput("Please solve:\n\n~t~10+") :-
-	format(atom(A), "Please solve:\n\n~t~10+", []),
-	pengine_output(A).
-poutput("Please simplify the fraction:\n\n~t~10+") :-
-	format(atom(A), "Please simplify the fraction:\n\n~t~10+", []),
-	pengine_output(A).
-poutput("The denominator of a fraction cannot be 0.\n") :-
-	format(atom(A), "The denominator of a fraction cannot be 0.\n", []),
-	pengine_output(A).
-poutput("Good, the solution is correct") :-
-	format(atom(A), "Good, the solution is correct", []),
-	pengine_output(A).
-poutput(" and also minimal. Very nice!\n\n") :-
-	format(atom(A), " and also minimal. Very nice!\n\n", []),
-	pengine_output(A).
-poutput(", but not minimal.\n") :-
-	format(atom(A), ", but not minimal.\n", []),
-	pengine_output(A).
-poutput("Good, the solution is correct and also minimal. Very nice!\n\n") :-
-	format(atom(A),
-	       "Good, the solution is correct and also minimal. Very nice!\n\n",
-	       []),
-	pengine_output(A).
-poutput("The answer must be an integer or a fraction.\n") :-
-	format(atom(A), "The answer must be an integer or a fraction.\n", []),
-	pengine_output(A).
-poutput("Good, the solution is correct") :-
-	format(atom(A), "Good, the solution is correct", []),
-	pengine_output(A).
-poutput(" and also minimal. Very nice!\n\n") :-
-	format(atom(A), " and also minimal. Very nice!\n\n", []),
-	pengine_output(A).
-poutput(", but not minimal.\n") :-
-	format(atom(A), ", but not minimal.\n", []),
-	pengine_output(A).
-poutput("The answer must be an integer or a fraction.\n") :-
-	format(atom(A), "The answer must be an integer or a fraction.\n", []),
-	pengine_output(A).
-poutput("I see you are having a hard time with this.\n") :-
-	format(atom(A), "I see you are having a hard time with this.\n", []),
-	pengine_output(A).
-poutput("Hint: Write this fraction as a single integer.\n") :-
-	format(atom(A),
-	       "Hint: Write this fraction as a single integer.\n",
-	       []),
-	pengine_output(A).
-poutput("Do not just guess! Multiply correctly, then add!\n") :-
-	format(atom(A),
-	       "Do not just guess! Multiply correctly, then add!\n",
-	       []),
-	pengine_output(A).
-poutput("The denominator is suitable, but the numerator is wrong!\n") :-
-	format(atom(A),
-	       "The denominator is suitable, but the numerator is wrong!\n",
-	       []),
-	pengine_output(A).
-poutput("The denominator is suitable, but the numerator is wrong!\n") :-
-	format(atom(A),
-	       "The denominator is suitable, but the numerator is wrong!\n",
-	       []),
-	pengine_output(A).
-poutput("Use a smaller common multiple as denominator to make this easier.\n") :-
-	format(atom(A),
-	       "Use a smaller common multiple as denominator to make this easier.\n",
-	       []),
-	pengine_output(A).
-poutput("You cannot just sum the numerators when the denominators are different!\n\n") :-
-	format(atom(A),
-	       "You cannot just sum the numerators when the denominators are different!\n\n",
-	       []),
-	pengine_output(A).
-poutput("You can either use that, or find a smaller multiple to make it easier.\n") :-
-	format(atom(A),
-	       "You can either use that, or find a smaller multiple to make it easier.\n",
-	       []),
-	pengine_output(A).
-poutput("You should not sum the denominators, but only the numerators!\n") :-
-	format(atom(A),
-	       "You should not sum the denominators, but only the numerators!\n",
-	       []),
-	pengine_output(A).
-poutput("A common multiple must be an integer!\n") :-
-	format(atom(A), "A common multiple must be an integer!\n", []),
-	pengine_output(A).
-poutput("The solution must be greater than 0.\n") :-
-	format(atom(A), "The solution must be greater than 0.\n", []),
-	pengine_output(A).
-poutput("Good, the solution is correct") :-
-	format(atom(A), "Good, the solution is correct", []),
-	pengine_output(A).
-poutput(" and also minimal. Very nice!\n\n") :-
-	format(atom(A), " and also minimal. Very nice!\n\n", []),
-	pengine_output(A).
-poutput(". There is also a smaller solution!\n") :-
-	format(atom(A), ". There is also a smaller solution!\n", []),
-	pengine_output(A).
-poutput("I see you are having a hard time with this.\n") :-
-	format(atom(A), "I see you are having a hard time with this.\n", []),
-	pengine_output(A).
-% TODO: generate clauses for subproblems automatically!
-poutput("Let us first find a common multiple of ~w and ~w!\n", [B,D]) :-
-                           format(atom(C),
-                           "Let us first find a common multiple of ~w and ~w!\n",
-                           [B,D]),
-                           pengine_output(C).
-poutput("Please enter a common multiple of ~w and ~w:\n\n", [A, B]) :-
-	format(atom(C),
-	       "Please enter a common multiple of ~w and ~w:\n\n",
-	       [A, B]),
-	pengine_output(C).
-poutput("Hint: ~w * ~w = ~w is a possible solution.\n", [A, B, C]) :-
-	format(atom(D),
-	       "Hint: ~w * ~w = ~w is a possible solution.\n",
-	       [A, B, C]),
-	pengine_output(D).
-poutput("~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A, B, C, A, B]) :-
-	format(atom(D),
-	       "~w is not a common multiple of ~w and ~w, since ~w is not divisible by ~w!\n",
-	       [A, B, C, A, B]),
-	pengine_output(D).
-poutput("~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n", [A, C, B, A, B]) :-
-	format(atom(D),
-	       "~w is no common multiple of ~w and ~w, since ~w is not divisible by ~w!\n",
-	       [A, C, B, A, B]),
-	pengine_output(D).
-poutput("Hint: Find a common divisor of ~w and ~w.\n", [A, B]) :-
-	format(atom(C),
-	       "Hint: Find a common divisor of ~w and ~w.\n",
-	       [A, B]),
-	pengine_output(C).
-poutput("Recall that you have already found the least common multiple of ~w and ~w!\n", [A, B]) :-
-	format(atom(C),
-	       "Recall that you have already found the least common multiple of ~w and ~w!\n",
-	       [A, B]),
-	pengine_output(C).
-poutput("First rewrite the fractions so that the denominator is ~w for both, then add.\n", [A]) :-
-	format(atom(B),
-	       "First rewrite the fractions so that the denominator is ~w for both, then add.\n",
-	       [A]),
-	pengine_output(B).
-poutput("Recall that you have already found a common multiple of ~w and ~w: ~w\n", [A, B, C]) :-
-	format(atom(D),
-	       "Recall that you have already found a common multiple of ~w and ~w: ~w\n",
-	       [A, B, C]),
-	pengine_output(D).
-poutput("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [A, B]) :-
-	format(atom(C),
-	       "~w cannot be a common denominator, because it cannot be divided by ~w.\n",
-	       [A, B]),
-	pengine_output(C).
-poutput("~w cannot be a common denominator, because it cannot be divided by ~w.\n", [A, B]) :-
-	format(atom(C),
-	       "~w cannot be a common denominator, because it cannot be divided by ~w.\n",
-	       [A, B]),
-	pengine_output(C).
       </script>
       <script>
             var pengine = new Pengine({
@@ -242,9 +78,19 @@ poutput("~w cannot be a common denominator, because it cannot be divided by ~w.\
             }
             function handleOutput() {
                 var d = this.data;
+                var str = d;
                 // console.log(d);
-                if (d == "done") { d = "<br><span style=\"color: green\">Done.</span>"; }
-                $('#out').append("<div class=\"rits\">" + d + "</div>");
+                if (d.functor == "format" ) {
+                    str = d.args[0].functor;
+                    if (d.args.length == 2) {
+                     for (var a in d.args[1]) {
+                          str = str.replace("~w", d.args[1][a]);
+                     }
+                    }
+                    str = str.replace("~t", "").replace("~10+", "");
+                }
+                if (str == "done") { str = "<br><span style=\"color: green\">Done.</span>"; }
+                $('#out').append("<div class=\"rits\">" + str + "</div>");
                 window.scrollTo(0,document.body.scrollHeight);
             }
       </script>
@@ -273,6 +119,6 @@ poutput("~w cannot be a common denominator, because it cannot be divided by ~w.\
             pengine.respond(r);
         }
     });
-    
+    $("#studentInput").focus();
   </script>
 </html>
