@@ -71,7 +71,7 @@ help(cancel(A/B), _, Hist) -->
 
 help(_, A/B, _) -->
         { \+ integer(A) ; \+ integer(B) },
-        "This is not a valid fraction.\n".
+        "Please write the fraction as x/y, where x and y are integers.\n".
 help(_/B + _/D, _/Y, Hist) -->
         { least_common_multiple(B, D, Y) },
         (   { Hist = [_=_/Y,_=_/Y,_=_/Y|_] } ->
