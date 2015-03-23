@@ -15,6 +15,7 @@ rits:solve(cancel(X/Y)) -->
         "Please simplify the fraction:\n\n~t~10+",
         [fraction_layout(X/Y)].
 
+fraction_answer(A/B) :- integer(A), integer(B).
 
 rits:actions(cancel(A/B), Answer0, _) -->
         (   { Answer0 = X / Y } ->
@@ -50,7 +51,10 @@ rits:actions(Expression0, Answer0, _) -->
                 (   { Answer is Answer } ->
                     " and also minimal. Very nice!\n\n"
                 ;   ", but not minimal.\n",
-                    solve(cancel(Answer0))
+                    (   { fraction_answer(Answer0) } ->
+                        solve(cancel(Answer0))
+                    ;   solve(Expression0)
+                    )
                 )
             ;   wrong, help, again
             )
@@ -69,8 +73,8 @@ help(cancel(A/B), _, Hist) -->
         ;   format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])
         ).
 
-help(_, A/B, _) -->
-        { \+ integer(A) ; \+ integer(B) },
+help(_, F, _) -->
+        { \+ fraction_answer(F) },
         "Please write the fraction as x/y, where x and y are integers.\n".
 help(_/B + _/D, _/Y, Hist) -->
         { least_common_multiple(B, D, Y) },
