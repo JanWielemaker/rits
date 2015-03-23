@@ -1,4 +1,4 @@
-# RITS: Rule-based Intelligent Tutoring System
+## RITS: Rule-based Intelligent Tutoring System
 
 RITS implements a domain-specific language for guiding students
 through solving tasks. See **rits_fractions.pl** for the definition of a concrete use case.
