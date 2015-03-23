@@ -53,7 +53,7 @@
 
             mathml(M) --> "<br><math style=\"padding-left: 5%\">", mathml_(M), "</math>".
 
-            mathml_(I) --> { integer(I) }, !, "<mi style=\"font-size: 20; font-weight: bold;\">", format_(I), "</mi>".
+            mathml_(I) --> { integer(I) }, !, "<mi mathvariant=\"bold\" mathsize=\"18pt\">", format_(I), "</mi>".
             mathml_(A/B) --> !, "<mfrac>", mathml_(A), mathml_(B), "</mfrac>".
             mathml_(A+B) -->
                     "<mrow>", mathml_(A), "</mrow>",
@@ -117,7 +117,14 @@
         if (ev.keyCode == 13) {
 
             var r = this.value.replace(".", "");
-            $('#out').append("<br><div class=\"student\">" + r + "</div><br>");
+            var d = r;
+            var ps = r.split("/");
+            if (ps.length == 2) {
+               var mi = "<mi mathsize=\"15pt\" mathvariant=\"bold\">";
+               d = "<math><mfrac>" + mi + ps[0] + "</mi>" +
+                                     mi + ps[1] + "</mi></mfrac></math>";
+            }
+            $('#out').append("<br><div class=\"student\">" + d + "</div><br>");
             this.value = '';
             ev.preventDefault();
             pengine.respond(r);
