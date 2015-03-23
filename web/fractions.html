@@ -26,7 +26,7 @@
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(format(F), S0) :-
-                pengine_output(format(F)),
+                pengine_output(format(F, [])),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(fraction_layout(F), S0) :-
@@ -80,13 +80,11 @@
                 var d = this.data;
                 var str = d;
                 // console.log(d);
-                if (d.functor == "format" ) {
+                if (d.functor == "format" && d.args.length == 2) {
                     str = d.args[0].functor;
-                    if (d.args.length == 2) {
-                     for (var a in d.args[1]) {
-                          str = str.replace("~w", d.args[1][a]);
-                     }
-                    }
+                    d.args[1].forEach(function (a) {
+                         str = str.replace("~w", a);
+                    });
                     str = str.replace("~t", "").replace("~10+", "");
                 }
                 if (str == "done") { str = "<br><span style=\"color: green\">Done.</span>"; }
