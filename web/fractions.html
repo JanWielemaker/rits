@@ -9,9 +9,9 @@
       <script src="/pengines.js"></script>
       <script type="text/x-prolog">
 
-            main :-
+            main(T) :-
                 rits:rits_start(S0),
-                rits:rits_next_action(solve(1/2+3/4),A,S0,S1),
+                rits:rits_next_action(solve(T), A, S0, S1),
                 interact(A, S1).
 
             interact(A, S) :-
@@ -71,7 +71,9 @@
                 onoutput: handleOutput
             });
             function handleCreate() {
-                pengine.ask('main');
+                var fpair = location.search.substring(1).split("&")[0].split("=");
+                var task = (fpair[0] == "solve") ? fpair[1] : "1/2+3/4";
+                pengine.ask('main(' + task + ')');
             }
             function handlePrompt() {
                 //pengine.respond(prompt(this.data));
