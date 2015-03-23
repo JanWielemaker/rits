@@ -103,7 +103,8 @@ help(A/B + C/D, X / _, Hist) -->
                         "Now apply this knowledge to the original task!\n"])
         ).
 help(A/B + C/D, Answer0, _) -->
-        { to_rational(Answer0, Answer),
+        { Answer0 = _/_,
+          to_rational(Answer0, Answer),
           Answer =:= (A + C) rdiv (B + D) },
         "You should not sum the denominators, but only the numerators!\n".
 help(_/B + _/_, _ / Y, _) -->
@@ -124,3 +125,4 @@ rits:test([solve(1/2+3/4),*,=>(a),*]).
 rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(10/8),"not minimal",*,"simplify",*]).
 rits:test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
 rits:test([solve(1/2+3/4),*,=>(1/4),*,=>(2/4),*,=>(3/4),"guess",*]).
+rits:test([solve(3/4+2/1),*,=>(1),"wrong",solve(_),*]).
