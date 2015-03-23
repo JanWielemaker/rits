@@ -23,6 +23,7 @@
         rits:actions//3,
         rits:test/1.
 
+:- use_module(rits_validation). % before anything else
 :- use_module(rits_fractions).
 :- use_module(rits_common_multiple).
 :- use_module(rits_multiple_choice).
