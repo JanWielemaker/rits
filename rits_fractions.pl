@@ -15,7 +15,8 @@ rits:solve(cancel(X/Y)) -->
         "Please simplify the fraction:\n\n~t~10+",
         [fraction_layout(X/Y)].
 
-fraction_answer(A/B) :- integer(A), integer(B).
+fraction_answer(F) :- integer(F).
+fraction_answer(F) :- nonvar(F), F = A/B, integer(A), integer(B).
 
 rits:actions(cancel(A/B), Answer0, _) -->
         (   { Answer0 = X / Y } ->
