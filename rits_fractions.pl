@@ -38,15 +38,14 @@ rits:actions(cancel(A/B), Answer0, _) -->
                 "Good, the solution is correct and also minimal. Very nice!\n\n"
             ;   wrong, help, again
             )
-        ;   wrong,
-            "The answer must be an integer or a fraction.\n",
+        ;   "Please enter an integer or a fraction.\n",
             again
         ).
 rits:actions(_, _/0, _) -->
         wrong, "The denominator of a fraction cannot be 0.", again.
 rits:actions(Expression0, Answer0, _) -->
         { to_rational(Expression0, Expression) },
-        (   { to_rational(Answer0, Answer) } ->
+        (   { fraction_answer(Answer0), to_rational(Answer0, Answer) } ->
             (   { catch(Expression =:= Answer,_,false) } ->
                 "Good, the solution is correct",
                 (   { Answer is Answer } ->
@@ -59,8 +58,7 @@ rits:actions(Expression0, Answer0, _) -->
                 )
             ;   wrong, help, again
             )
-        ;   wrong,
-            "The answer must be an integer or a fraction.\n",
+        ;   "Please enter an integer or a fraction.\n",
             again
         ).
 
@@ -126,3 +124,4 @@ rits:test([solve(1/2 + 3/4),*,=>(4/6),*,=>(4),*,=>(10/8),"not minimal",*,"simpli
 rits:test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
 rits:test([solve(1/2+3/4),*,=>(1/4),*,=>(2/4),*,=>(3/4),"guess",*]).
 rits:test([solve(3/4+2/1),*,=>(1),"wrong",solve(_),*]).
+rits:test([solve(1/2+3/4),*,=>(4/4+1/4),"integer or a fraction",*]).
