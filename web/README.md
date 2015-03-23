@@ -15,3 +15,7 @@ You can try different tasks by appending **?solve=Task**, for example:
 [http://localhost:5050/fractions.html?solve=1/3+1/4](http://localhost:5050/fractions.html?solve=1/3+1/4)
 
 [http://localhost:5050/fractions.html?solve=2/5+1/2](http://localhost:5050/fractions.html?solve=2/5+1/2)
+
+**Screenshot**
+
+![Screenshot](screenshot.png)
