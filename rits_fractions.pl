@@ -69,6 +69,9 @@ help(cancel(A/B), _, Hist) -->
         ;   format("Hint: Find a common divisor of ~w and ~w.\n", [A,B])
         ).
 
+help(_, A/B, _) -->
+        { \+ integer(A) ; \+ integer(B) },
+        "This is not a valid fraction.\n".
 help(_/B + _/D, _/Y, Hist) -->
         { least_common_multiple(B, D, Y) },
         (   { Hist = [_=_/Y,_=_/Y,_=_/Y|_] } ->
