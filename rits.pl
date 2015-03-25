@@ -23,7 +23,6 @@
         rits:actions//3,
         rits:test/1.
 
-:- use_module(rits_validation). % before anything else
 :- use_module(rits_fractions).
 :- use_module(rits_common_multiple).
 :- use_module(rits_multiple_choice).
@@ -116,6 +115,13 @@ next_actions(next, Hist, Hist) -->
         ).
 next_actions(done, Hist, Hist) --> [done].
 next_actions(internal(I), Hist, [internal(I)|Hist]) --> [].
+next_actions(student_answers(A), Hist0, Hist) -->
+        { \+ ground(A),
+          Hist0 = [internal(Expr)|Rest],
+          Hist = [internal(Expr=A)|Rest],
+          memberchk(solve(Task), Hist) },
+        "The answer cannot contain Prolog variables.",
+        [solve(Task)].
 next_actions(student_answers(A), Hist0, Hist) -->
         { Hist0 = [internal(Expr)|Rest],
           Hist = [internal(Expr=A)|Rest],
