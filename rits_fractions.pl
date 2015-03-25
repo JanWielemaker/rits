@@ -7,6 +7,7 @@
 
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
+to_rational(integer_and(I, F0), R) :- !, to_rational(F0, R0), R is I + R0.
 to_rational(A/B, A rdiv B) :- !.
 
 % TODO: improve sandboxing so that the module qualifier is not needed
@@ -26,6 +27,7 @@ rits:solve(cancel(X/Y)) -->
 
 fraction_answer(F) :- integer(F).
 fraction_answer(F) :- nonvar(F), F = A/B, integer(A), integer(B).
+fraction_answer(integer_and(_, _)).
 
 rits:actions(cancel(A/B), Answer0, _) -->
         (   { Answer0 = X / Y } ->
