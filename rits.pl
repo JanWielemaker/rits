@@ -24,6 +24,8 @@
         rits:rits_term//1,
         rits:test/1.
 
+:- use_module(library(dcg/basics)).
+
 :- use_module(rits_fractions).
 :- use_module(rits_common_multiple).
 :- use_module(rits_multiple_choice).
@@ -125,7 +127,8 @@ next_actions(student_answers(A), Hist0, Hist) -->
         [solve(Task)].
 next_actions(student_answers(A0), Hist0, Hist) -->
         { (  string(A0),
-             (   string_codes(A0, Cs), phrase(rits_term(A), Cs) ->
+             (   string_codes(A0, Cs),
+                 phrase((blanks,rits_term(A),blanks), Cs) ->
                  true % commit to first match
              ;   atom_string(A, A0)
              )
