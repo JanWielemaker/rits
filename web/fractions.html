@@ -31,7 +31,7 @@
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(fraction_layout(F), S0) :-
-                phrase(mathml(F), Ms),
+                phrase(mathml(18, F), Ms),
                 atom_codes(Action, Ms),
                 concat_atom(['<div style=\"padding-left: 5%\">',
                               Action,'</div>'], Atom),
@@ -51,7 +51,7 @@
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(student_answers(Answer), S0) :-
-                (    phrase(format_answer(Answer), Cs) ->
+                (    phrase(mathml(18, Answer), Cs) ->
                      atom_codes(Atom, Cs)
                 ;    term_to_atom(Answer, Atom)
                 ),
@@ -62,16 +62,19 @@
                 rits:rits_next_action(solve(T), A, S0, S),
                 interact(A, S).
 
-            format_answer(F) --> { ground(F), F = A/B }, mathml(A/B).
+            mathml(Size, M) --> "<br><math>", mathml_(Size, M), "</math>".
 
-            mathml(M) --> "<br><math>", mathml_(M), "</math>".
-
-            mathml_(I) --> { integer(I) ; atom(I) }, !, "<mi mathvariant=\"bold\" mathsize=\"18pt\">", format_(I), "</mi>".
-            mathml_(A/B) --> !, "<mfrac>", mathml_(A), mathml_(B), "</mfrac>".
-            mathml_(A+B) -->
-                    "<mrow>", mathml_(A), "</mrow>",
+            mathml_(Size, I) --> { integer(I) ; atom(I) }, !,
+                    "<mi mathvariant=\"bold\" mathsize=\"",
+                    format_(Size), "pt\">", format_(I), "</mi>".
+            mathml_(Size0, integer_and(I,A)) --> { Size is Size0 - 5 },
+                     mathml_(Size0, I), mathml_(Size, A).
+            mathml_(Size, A/B) --> !, "<mfrac>",
+                    mathml_(Size, A), mathml_(Size, B), "</mfrac>".
+            mathml_(Size, A+B) -->
+                    "<mrow>", mathml_(Size, A), "</mrow>",
                     "<mo>+</mo>",
-                    "<mrow>", mathml_(B), "</mrow>".
+                    "<mrow>", mathml_(Size, B), "</mrow>".
 
             format_(Arg) --> call(format_dcg(Arg)).
 
@@ -136,7 +139,7 @@
             var r = this.value.replace(".", "");
             this.value = '';
             ev.preventDefault();
-            pengine.respond(r);
+            pengine.respond("\"" + r + "\"");
         }
     });
     $("#studentInput").focus();
