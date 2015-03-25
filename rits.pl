@@ -21,6 +21,7 @@
 :- multifile
         rits:solve//1,
         rits:actions//3,
+        rits:rits_term//1,
         rits:test/1.
 
 :- use_module(rits_fractions).
@@ -122,8 +123,12 @@ next_actions(student_answers(A), Hist0, Hist) -->
           memberchk(solve(Task), Hist) },
         "The answer cannot contain Prolog variables.",
         [solve(Task)].
-next_actions(student_answers(A), Hist0, Hist) -->
-        { Hist0 = [internal(Expr)|Rest],
+next_actions(student_answers(A0), Hist0, Hist) -->
+        { (  string(A0), string_codes(A0, Cs),
+             phrase(rits_term(A), Cs) -> true % commit to first match
+          ;  A0 = A
+          ),
+          Hist0 = [internal(Expr)|Rest],
           Hist = [internal(Expr=A)|Rest],
           list_internals(Hist, Is),
           once(phrase(actions(Expr, A, Is), As0)), % commit to first match

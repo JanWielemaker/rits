@@ -3,10 +3,19 @@
 
 :- use_module(rits_common_multiple).
 :- use_module(lorits).
+:- use_module(library(dcg/basics)).
 
 to_rational(A, A)          :- integer(A), !.
 to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
 to_rational(A/B, A rdiv B) :- !.
+
+% TODO: improve sandboxing so that the module qualifier is not needed
+rits:rits_term(I) --> dcg_basics:integer(I).
+rits:rits_term(A/B) -->
+        dcg_basics:(integer(A), blanks, "/", blanks, integer(B)).
+rits:rits_term(integer_and(I,A/B)) -->
+        dcg_basics:(integer(I),blank,blanks,
+                    integer(A),blanks,"/",blanks,integer(B)).
 
 rits:solve(A/B + C/D) -->
         "Please solve:\n\n~t~10+",
