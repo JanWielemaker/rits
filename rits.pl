@@ -124,8 +124,11 @@ next_actions(student_answers(A), Hist0, Hist) -->
         "The answer cannot contain Prolog variables.",
         [solve(Task)].
 next_actions(student_answers(A0), Hist0, Hist) -->
-        { (  string(A0), string_codes(A0, Cs),
-             phrase(rits_term(A), Cs) -> true % commit to first match
+        { (  string(A0),
+             (   string_codes(A0, Cs), phrase(rits_term(A), Cs) ->
+                 true % commit to first match
+             ;   atom_string(A, A0)
+             )
           ;  A0 = A
           ),
           Hist0 = [internal(Expr)|Rest],
