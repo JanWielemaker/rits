@@ -64,12 +64,12 @@
 
             mathml(Size, M) --> "<br><math>", mathml_(Size, M), "</math>".
 
-            mathml_(Size, I) --> { integer(I) ; atom(I) }, !,
+            mathml_(Size, I) --> { integer(I) ; atom(I) },
                     "<mi mathvariant=\"bold\" mathsize=\"",
                     format_(Size), "pt\">", format_(I), "</mi>".
             mathml_(Size0, integer_and(I,A)) --> { Size is Size0 - 5 },
                      mathml_(Size0, I), mathml_(Size, A).
-            mathml_(Size, A/B) --> !, "<mfrac>",
+            mathml_(Size, A/B) --> "<mfrac>",
                     mathml_(Size, A), mathml_(Size, B), "</mfrac>".
             mathml_(Size, A+B) -->
                     "<mrow>", mathml_(Size, A), "</mrow>",
