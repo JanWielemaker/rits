@@ -126,7 +126,7 @@ next_actions(student_answers(A), Hist0, Hist) -->
               maplist(again_means(solve(T)), As1, As)
           ;   As = As1
           ) },
-        As.
+        [student_answers(A)|As].
 next_actions(subproblem(Ls), Hist, Hist) --> [enter], Ls, [exit].
 next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         (   { Hist = [_,solve(Expression)|_] } ->
@@ -220,6 +220,7 @@ test_action_rest(*, A0, A, [T|Ts0], Ts) :-
 test_action_rest(Sub, A0, next, Ts0, Ts) :-
         string(Sub),
         (   action_string(A0, String) -> true
+        ;   A0 = student_answers(_) -> String = "" % ignore parsed answer
         ;   throw(looking_for(Sub)-got(A0))
         ),
         (   string_substring(String, Sub) ->

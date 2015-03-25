@@ -33,7 +33,9 @@
             interact_(fraction_layout(F), S0) :-
                 phrase(mathml(F), Ms),
                 atom_codes(Action, Ms),
-                pengine_output(Action),
+                concat_atom(['<div style=\"padding-left: 5%\">',
+                              Action,'</div>'], Atom),
+                pengine_output(Atom),
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
             interact_(read_answer, S0) :-
@@ -48,13 +50,23 @@
             interact_(exit, S0) :-
                 rits:rits_next_action(next, A, S0, S),
                 interact(A, S).
+            interact_(student_answers(Answer), S0) :-
+                (    phrase(format_answer(Answer), Cs) ->
+                     atom_codes(Atom, Cs)
+                ;    term_to_atom(Answer, Atom)
+                ),
+                pengine_output(student_answers(Atom)),
+                rits:rits_next_action(next, A, S0, S),
+                interact(A, S).
             interact_(solve(T), S0) :-
                 rits:rits_next_action(solve(T), A, S0, S),
                 interact(A, S).
 
-            mathml(M) --> "<br><math style=\"padding-left: 5%\">", mathml_(M), "</math>".
+            format_answer(F) --> { ground(F), F = A/B }, mathml(A/B).
 
-            mathml_(I) --> { integer(I) }, !, "<mi mathvariant=\"bold\" mathsize=\"18pt\">", format_(I), "</mi>".
+            mathml(M) --> "<br><math>", mathml_(M), "</math>".
+
+            mathml_(I) --> { integer(I) ; atom(I) }, !, "<mi mathvariant=\"bold\" mathsize=\"18pt\">", format_(I), "</mi>".
             mathml_(A/B) --> !, "<mfrac>", mathml_(A), mathml_(B), "</mfrac>".
             mathml_(A+B) -->
                     "<mrow>", mathml_(A), "</mrow>",
@@ -83,18 +95,23 @@
                 var d = this.data;
                 var str = d;
                 // console.log(d);
-                if (d.functor == "format" && d.args.length == 2) {
-                    str = d.args[0].functor;
-                    d.args[1].forEach(function (a) {
-                         str = str.replace("~w", a);
-                    });
-                    str = str.replace("~t", "").replace("~10+", "");
+                if (d.functor == "student_answers") {
+                     $('#out').append("<br><div class=\"student\">" +
+                                         d.args[0] + "</div><br>");
+                } else {
+                     if (d.functor == "format" && d.args.length == 2) {
+                         str = d.args[0].functor;
+                         d.args[1].forEach(function (a) {
+                              str = str.replace("~w", a);
+                         });
+                         str = str.replace("~t", "").replace("~10+", "");
+                     }
+                     if (str == "done") {
+                         str = "<br><span style=\"color: green\">Done.</span>";
+                         $('#yourAnswer').hide();
+                     }
+                     $('#out').append("<div class=\"rits\">" + str + "</div>");
                 }
-                if (str == "done") {
-                    str = "<br><span style=\"color: green\">Done.</span>";
-                    $('#yourAnswer').hide();
-                }
-                $('#out').append("<div class=\"rits\">" + str + "</div>");
                 window.scrollTo(0,document.body.scrollHeight);
             }
       </script>
@@ -116,16 +133,7 @@
     $("#studentInput").focus(function () { console.log("focus"); });
     $("#studentInput").keydown(function (ev) {
         if (ev.keyCode == 13) {
-
             var r = this.value.replace(".", "");
-            var d = r;
-            var ps = r.split("/");
-            if (ps.length == 2) {
-               var mi = "<mi mathsize=\"15pt\" mathvariant=\"bold\">";
-               d = "<math><mfrac>" + mi + ps[0] + "</mi>" +
-                                     mi + ps[1] + "</mi></mfrac></math>";
-            }
-            $('#out').append("<br><div class=\"student\">" + d + "</div><br>");
             this.value = '';
             ev.preventDefault();
             pengine.respond(r);

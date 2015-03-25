@@ -42,6 +42,7 @@ interact_until_done(Action0, S0) :-
 %         format("\n\nINTERPRETING: ~w\n\n", [A]), false.
 interpret_action(enter, next).
 interpret_action(exit, next).
+interpret_action(student_answers(_), next).
 interpret_action(format(F,As), next)       :- format(F, As).
 interpret_action(format(F), next)          :- format(F).
 interpret_action(read_answer, student_answers(T)) :-
@@ -104,6 +105,8 @@ multiple_choice_sample :-
 ?- solve_with_student(cm(2,4)).
 
 ?- solve_with_student(1/2+3/4).
+?- rits:rits_run_test([solve(3/4+2/1),*,=>(1),"wrong",solve(_),*]).
+?- rits:rits_run_test([solve(3/4+2/1),*,=>(1),"wrong",solve(_),*]).
 
 ?- rits:rits_run_test([solve(1/2+3/4),*,=>(5/0),"wrong",*]).
 
@@ -114,6 +117,7 @@ multiple_choice_sample :-
 ?- solve_with_student(1/2-3/4).
 
 ?- rits:rits_run_tests.
+?- rits:rits_run_test([solve(1/2+3/4),*,=>(4/4+1/4),"integer or a fraction",*]).
 
 ?- rits:rits_run_test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
 
