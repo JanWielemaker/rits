@@ -17,6 +17,9 @@ rits:rits_term(A/B) -->
 rits:rits_term(integer_and(I,A/B)) -->
         dcg_basics:(integer(I),blank,blanks,
                     integer(A),blanks,"/",blanks,integer(B)).
+rits:rits_term(integer_and(I,A/B)) -->
+        dcg_basics:(integer(I),blanks,",",blanks,
+                    integer(A),blanks,"/",blanks,integer(B)).
 
 rits:solve(A/B + C/D) -->
         "Please solve:\n\n~t~10+",
