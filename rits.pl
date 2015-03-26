@@ -144,7 +144,7 @@ next_actions(student_answers(A0), Hist0, Hist) -->
           ;   As = As1
           ) },
         [student_answers(A)|As].
-next_actions(subproblem(Ls), Hist, Hist) --> [enter], Ls, [exit].
+next_actions(subproblem(Ls), Hist, Hist) --> [enter], list(Ls), [exit].
 next_actions(solve(Expression), Hist, [solve(Expression)|Hist]) -->
         (   { Hist = [_,solve(Expression)|_] } ->
             [format("So, let's try again!\n")]
@@ -158,6 +158,9 @@ again_means(T, A0, A) :-
         (   A0 == again -> A = T
         ;   A = A0
         ).
+
+list([]) --> [].
+list([L|Ls]) --> [L], list(Ls).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    The LORITS element "help(Module:Pred)" means to ask Pred in Module
@@ -231,7 +234,7 @@ test_action_rest(*, A0, A, [T|Ts0], Ts) :-
             A = solve(Task),
             Ts = [*,T|Ts0]
         ;   A = next,
-%            format("skipping: ~q, waiting for: ~w\n", [A0,T]),
+            % format("skipping: ~q, waiting for: ~w\n", [A0,T]),
             Ts = [*,T|Ts0]
         ).
 test_action_rest(Sub, A0, next, Ts0, Ts) :-
