@@ -5,10 +5,10 @@
 :- use_module(lorits).
 :- use_module(library(dcg/basics)).
 
-to_rational(A, A)          :- integer(A), !.
-to_rational(A0+B0, A + B)  :- !, to_rational(A0, A), to_rational(B0, B).
-to_rational(integer_and(I, A0/B), A rdiv B) :- !, A is A0 + I*B.
-to_rational(A/B, A rdiv B) :- !.
+to_rational(A, A)          :- integer(A).
+to_rational(A/B, A rdiv B).
+to_rational(A0+B0, A + B)  :- to_rational(A0, A), to_rational(B0, B).
+to_rational(integer_and(I, A0/B), A rdiv B) :- A is A0 + I*B.
 
 % TODO: improve sandboxing so that the module qualifier is not needed
 rits:rits_term(I) --> dcg_basics:integer(I).
@@ -27,7 +27,7 @@ rits:solve(cancel(X/Y)) -->
         [fraction_layout(X/Y)].
 
 fraction_answer(F) :- integer(F).
-fraction_answer(F) :- nonvar(F), F = A/B, integer(A), integer(B).
+fraction_answer(A/B) :- integer(A), integer(B).
 fraction_answer(integer_and(_, _)).
 
 rits:actions(cancel(integer_and(_,F)), A0, Hist) -->
