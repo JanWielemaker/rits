@@ -3,9 +3,7 @@
 
 :- use_module(lorits).
 
-goal_expansion(help(Ls0, Ls), Ls0 = [help(rits_common_multiple)|Ls]).
-term_expansion(help(A, B, C) --> Body,
-               rits:help(rits_common_multiple, A, B, C) --> Body).
+rits_help(rits_common_multiple:help).
 
 rits:solve(cm(X,Y)) -->
         format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y]).

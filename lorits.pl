@@ -23,6 +23,14 @@ subproblem(P) --> [subproblem(P)].
 
 help(Pred) --> [help(Pred)].
 
+user:term_expansion(rits_help(Module:Pred),
+                    [Module:goal_expansion(HelpGoal, ModuleGoal),
+                     Module:term_expansion(HelpDCG, MainDCG)]) :-
+        HelpGoal =.. [Pred,Ls0,Ls],
+        ModuleGoal = ( Ls0 = [help(Module)|Ls] ),
+        DCGHead =.. [Pred,A,B,C],
+        HelpDCG = (DCGHead --> Body),
+        MainDCG = (rits:help(Module, A, B, C) --> Body).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
    TODO: Find a way to structure the modules so that the following

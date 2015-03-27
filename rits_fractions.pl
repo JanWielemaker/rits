@@ -5,9 +5,7 @@
 :- use_module(lorits).
 :- use_module(library(dcg/basics)).
 
-goal_expansion(help(Ls0, Ls), Ls0 = [help(rits_fractions)|Ls]).
-term_expansion(help(A, B, C) --> Body,
-               rits:help(rits_fractions, A, B, C) --> Body).
+rits_help(rits_fractions:help).
 
 to_rational(A, A)          :- integer(A).
 to_rational(A/B, A rdiv B).
@@ -82,8 +80,6 @@ rits:actions(Expression0, Answer0, _) -->
         ;   "Please enter an integer or a fraction.\n",
             again
         ).
-
-help --> help(rits_fractions:help).
 
 help(cancel(A/B), _, Hist) -->
         { Hist = [cancel(A/B)=_,cancel(A/B)=_,cancel(A/B)=_|_] },
