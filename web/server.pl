@@ -19,9 +19,9 @@
 :- use_module(library(http/http_server_files)).
 :- use_module(library(http/http_files)).
 
-:- pengine_application(rits).
+:- pengine_application(rits_web).
 :- use_module(rits:library(pengines_io)).
-pengines:prepare_module(Module, rits, _Options) :-
+pengines:prepare_module(Module, rits_web, _Options) :-
         pengines_io:pengine_bind_io_to_html(Module).
 
 :- http_handler(/, http_reply_from_files(., []), [prefix]).
