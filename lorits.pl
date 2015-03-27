@@ -10,6 +10,8 @@
                    wrong//0
                   ]).
 
+:- public format//2, again//0. % why are only these necessary for sandbox?
+
 wrong --> [format("This is wrong!\n")].
 
 again --> [again].
@@ -36,14 +38,3 @@ user:term_expansion(rits_help(Module:Pred),
         DCGHead =.. [Pred,A,B,C],
         HelpDCG = (DCGHead --> Body),
         MainDCG = (rits:help(Module, A, B, C) --> Body).
-
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   TODO: Find a way to structure the modules so that the following
-         declarations are not necessary. These are provably safe.
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
-:- multifile
-	sandbox:safe_primitive/1.
-
-sandbox:safe_primitive(lorits:format(_,_,_,_)).
-sandbox:safe_primitive(lorits:again(_,_)).
