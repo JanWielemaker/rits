@@ -3,6 +3,10 @@
 
 :- use_module(lorits).
 
+goal_expansion(help(Ls0, Ls), Ls0 = [help(rits_common_multiple)|Ls]).
+term_expansion(help(A, B, C) --> Body,
+               rits:help(rits_common_multiple, A, B, C) --> Body).
+
 rits:solve(cm(X,Y)) -->
         format("Please enter a common multiple of ~w and ~w:\n\n", [X,Y]).
 
@@ -27,8 +31,6 @@ rits:actions(cm(X,Y), Answer, _) -->
 rits:actions(cm(_,_), _, _) --> wrong, help, again.
 
 least_common_multiple(X, Y, CM) :- CM is X*Y // gcd(X, Y).
-
-help --> help(rits_common_multiple:help).
 
 help(cm(X,Y), _, Hist) -->
         { Hist = [cm(X,Y)=_,cm(X,Y)=_,cm(X,Y)=_|_] },

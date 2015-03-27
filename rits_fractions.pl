@@ -5,6 +5,10 @@
 :- use_module(lorits).
 :- use_module(library(dcg/basics)).
 
+goal_expansion(help(Ls0, Ls), Ls0 = [help(rits_fractions)|Ls]).
+term_expansion(help(A, B, C) --> Body,
+               rits:help(rits_fractions, A, B, C) --> Body).
+
 to_rational(A, A)          :- integer(A).
 to_rational(A/B, A rdiv B).
 to_rational(A0+B0, A + B)  :- to_rational(A0, A), to_rational(B0, B).

@@ -22,6 +22,7 @@
         rits:solve//1,
         rits:actions//3,
         rits:rits_term//1,
+        rits:help//4,
         rits:test/1.
 
 :- use_module(library(dcg/basics)).
@@ -85,8 +86,8 @@ nexts_action_nexts([Action0|Nexts0], Action, Nexts) :-
         ;   string(Action0) ->
             Action = format(Action0),
             Nexts = Nexts0
-        ;   Action0 = help_phrase(Goal) ->
-            (   phrase(Goal, As) -> true
+        ;   Action0 = help_phrase(Module,Task,Answer,History) ->
+            (   phrase(help(Module,Task,Answer,History), As) -> true
             ;   As = [] % no help available
             ),
             append(As, Nexts0, Nexts1),
@@ -173,9 +174,8 @@ list([L|Ls]) --> [L], list(Ls).
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 expand_help(Task, Answer, History, A0, A) :-
-        (   A0 = help(M:DCG) ->
-            A1 =.. [DCG, Task, Answer, History],
-            A = help_phrase(M:A1)
+        (   A0 = help(Module) ->
+            A = help_phrase(Module, Task, Answer, History)
         ;   A = A0
         ).
 
