@@ -116,7 +116,6 @@ multiple_choice_sample :-
 ?- solve_with_student(cm(1,2)).
 ?- solve_with_student(1/2-3/4).
 
-?- rits:rits_run_tests.
 ?- rits:rits_run_test([solve(1/2+3/4),*,=>(4/4+1/4),"integer or a fraction",*]).
 
 ?- rits:rits_run_test([solve(cancel(2/2)),*,=>(2/2),*,=>(2/2),*,=>(2/2),"single integer",*,=>(2),"wrong",*,=>(1),"nice"]).
@@ -130,4 +129,6 @@ multiple_choice_sample :-
 ?- rits:rits_run_test([solve(cm(2,4)),*,=>(2),*,solve(_),*,=>(2),*,solve(_),*,=>(2),"hard time",*]).
 
 ?- rits:rits_run_test([solve(1/2 + 3/4),*,=>(4/6),*,solve(_),*,=>(4),*,solve(_),*,=>(5/4),"nice"]).
+
+?- rits:rits_run_tests.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
