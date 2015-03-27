@@ -143,7 +143,7 @@
             var r = this.value.replace(".", "");
             this.value = '';
             ev.preventDefault();
-            pengine.respond("\"" + r + "\"");
+            pengine.respond(Pengine.stringify(r));
         }
     });
     $("#studentInput").focus();
