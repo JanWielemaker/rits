@@ -164,9 +164,9 @@ list([]) --> [].
 list([L|Ls]) --> [L], list(Ls).
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   The LORITS element "help(Module:Pred)" means to ask Pred in Module
-   for further actions, where Pred is called with task, student's
-   answer, and interaction history.
+   See the comment in lorits.pl for help messages. When encountering
+   help(Module), we need to call rits_help//4 with Module, task to be
+   solved, student answer and interaction history as arguments.
 
    During exams and drilling exercises, we can immediately turn off
    the system's guiding messages and sub-tasks by simply interpreting
