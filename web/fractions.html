@@ -5,13 +5,10 @@
       .rits { color: black; font-size: 20;}
       .student { color: blue; font-weight: bold; font-size: 20; padding-left: 5%}
     </style>
-      
+
       <script src="/jquery-2.0.3.min.js"></script>
       <script src="/js/pengines.js"></script>
       <script type="text/x-prolog">
-
-            :- use_module(library(pengines)).
-            :- use_module('../rits').
 
             main(T) :-
                 rits_start(S0),
@@ -24,7 +21,7 @@
                      pengine_output(Atom)
                 ).
 
-            
+
             interact_(format(F,Args), S0) :-
                 pengine_output(format(F, Args)),
                 rits_next_action(next, A, S0, S),
