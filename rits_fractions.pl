@@ -12,16 +12,15 @@ to_rational(A/B, A rdiv B).
 to_rational(A0+B0, A + B)  :- to_rational(A0, A), to_rational(B0, B).
 to_rational(integer_and(I, A0/B), A rdiv B) :- A is A0 + I*B.
 
-% TODO: improve sandboxing so that the module qualifier is not needed
-rits:rits_term(I) --> dcg_basics:integer(I).
+rits:rits_term(I) --> integer(I).
 rits:rits_term(A/B) -->
-        dcg_basics:(integer(A), blanks, "/", blanks, integer(B)).
+        integer(A), blanks, "/", blanks, integer(B).
 rits:rits_term(integer_and(I,A/B)) -->
-        dcg_basics:(integer(I),blank,blanks,
-                    integer(A),blanks,"/",blanks,integer(B)).
+        integer(I),blank,blanks,
+	integer(A),blanks,"/",blanks,integer(B).
 rits:rits_term(integer_and(I,A/B)) -->
-        dcg_basics:(integer(I),blanks,",",blanks,
-                    integer(A),blanks,"/",blanks,integer(B)).
+        integer(I),blanks,",",blanks,
+	integer(A),blanks,"/",blanks,integer(B).
 
 rits:solve(A/B + C/D) -->
         "Please solve:\n\n~t~10+",

@@ -10,8 +10,6 @@
                    wrong//0
                   ]).
 
-:- public format//2, again//0. % why are only these necessary for sandbox?
-
 wrong --> [format("This is wrong!\n")].
 
 again --> [again].
