@@ -13,20 +13,20 @@
 	  ]).
 
 :- use_module(library(pengines)).
-:- use_module(pengine_sandbox:library(pengines)).
 :- use_module(library(http/thread_httpd)).
 :- use_module(library(http/http_dispatch)).
 :- use_module(library(http/http_server_files)).
 :- use_module(library(http/http_files)).
 
 :- pengine_application(rits_web).
-:- use_module(rits:library(pengines_io)).
+:- use_module(rits_web:library(pengines)).
+:- use_module(rits_web:library(pengines_io)).
+:- use_module(rits_web:'../rits').
 pengines:prepare_module(Module, rits_web, _Options) :-
         pengines_io:pengine_bind_io_to_html(Module).
 
 :- http_handler(/, http_reply_from_files(., []), [prefix]).
 
-:- use_module('../rits').
 
 server(Port) :-
 	http_server(http_dispatch, [port(Port)]).
