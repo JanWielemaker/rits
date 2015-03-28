@@ -19,11 +19,11 @@
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 :- multifile
-        rits:solve//1,
-        rits:actions//3,
-        rits:rits_term//1,
-        rits:help//4,
-        rits:test/1.
+        solve//1,
+        actions//3,
+        rits_term//1,
+        help//4,
+        test/1.
 
 :- use_module(library(dcg/basics)).
 
